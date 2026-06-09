@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Digital Seller Super Tools icon">
+  <defs>
+    <linearGradient id="g" x1="64" y1="42" x2="448" y2="470" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#34d399"/><stop offset=".52" stop-color="#10b981"/><stop offset="1" stop-color="#0f766e"/>
+    </linearGradient>
+    <filter id="s" x="0" y="0" width="512" height="512"><feDropShadow dx="0" dy="22" stdDeviation="24" flood-color="#064e3b" flood-opacity=".28"/></filter>
+  </defs>
+  <rect x="48" y="48" width="416" height="416" rx="118" fill="url(#g)" filter="url(#s)"/>
+  <path d="M150 308c34 58 126 72 188 26 33-24 51-57 55-93" fill="none" stroke="#ecfdf5" stroke-width="34" stroke-linecap="round"/>
+  <path d="M156 205h200M156 256h145" stroke="#ecfdf5" stroke-width="34" stroke-linecap="round"/>
+  <circle cx="363" cy="181" r="34" fill="#fbbf24"/>
+</svg>
