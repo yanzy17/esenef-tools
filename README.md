@@ -38,11 +38,40 @@ Digital Seller Assistant cocok untuk:
 - Pelajar yang mau mulai jualan pelan-pelan.
 - Orang yang sudah punya produk tapi bingung cara promosi.
 
+## Langkah dari Awal Paling Gampang
+
+Kalau kamu belum pernah deploy web, pakai urutan ini dulu:
+
+1. Download / simpan semua file project dalam satu folder.
+2. Pastikan file ini ada di folder yang sama:
+   - `index.html`
+   - `style.css`
+   - `script.js`
+   - `manifest.json`
+   - `service-worker.js`
+   - `icon.svg`
+3. Klik dua kali `index.html`.
+4. Browser akan terbuka.
+5. Klik **Lihat Hasil Demo** untuk langsung lihat output contoh.
+6. Kalau mau pakai produk sendiri, scroll ke generator, isi nama produk, lalu klik **Generate Paket Promosi**.
+
 ## Cara Paling Cepat Lihat Hasil
 
 1. Buka `index.html` di browser.
 2. Klik **Lihat Hasil Demo** di hero atau **Tampilkan Hasil Demo** di empty state.
 3. Tools otomatis mengisi contoh `Paket Produk Digital Siap Jual` dan langsung menampilkan paket promosi siap copy.
+
+## Kalau Mau Jadi Link Publik Tanpa Ribet
+
+Pakai Netlify Drop:
+
+1. Buka `https://app.netlify.com/drop`.
+2. Drag folder project ke halaman Netlify.
+3. Tunggu upload selesai.
+4. Netlify langsung kasih link web.
+5. Buka link itu, lalu klik **Lihat Hasil Demo** atau isi produk sendiri.
+
+Tidak perlu build command, tidak perlu install Node.js, dan tidak perlu backend.
 
 ## Cara Pakai Manual
 
