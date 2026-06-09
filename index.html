@@ -2,71 +2,144 @@
 <html lang="id">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#10b981">
-  <title>Digital Seller Super Tools</title>
+  <meta name="description" content="Esenef17 Affiliate Tools, PWA ringan untuk riset produk, hook, caption, CTA, script video, ide konten, prompt AI, reply DM, dan kalkulator komisi affiliate.">
+  <title>Esenef17 Affiliate Tools</title>
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon.svg">
   <link rel="stylesheet" href="style.css">
 </head>
-<body data-page="home">
+<body>
   <div class="app-shell">
-    <aside class="sidebar">
-      <a class="brand" href="index.html" aria-label="Digital Seller Super Tools"><img src="icon.svg" alt="" class="brand-icon"><span>Digital Seller<br><strong>Super Tools</strong></span></a>
+    <aside class="sidebar" aria-label="Sidebar navigation">
+      <a class="brand" href="#dashboard" data-target="dashboard" aria-label="Esenef17 Affiliate Tools">
+        <img src="icon.svg" alt="" class="brand-icon">
+        <span><strong>Esenef17</strong><small>Affiliate Tools</small></span>
+      </a>
       <nav class="side-nav" aria-label="Navigasi utama">
-        <a class="active" href="index.html">🏠 Home</a>
-        <a href="tools-affiliate.html">⚡ Tools Affiliate</a>
-        <a href="buku-keuangan.html">💸 Buku Keuangan</a>
+        <button class="nav-link active" data-target="dashboard" type="button">Dashboard</button>
+        <button class="nav-link" data-target="riset" type="button">Riset Produk</button>
+        <button class="nav-link" data-target="angle" type="button">Angle</button>
+        <button class="nav-link" data-target="hook" type="button">Hook</button>
+        <button class="nav-link" data-target="caption" type="button">Caption</button>
+        <button class="nav-link" data-target="cta" type="button">CTA</button>
+        <button class="nav-link" data-target="script" type="button">Script Video</button>
+        <button class="nav-link" data-target="ide" type="button">Ide Konten</button>
+        <button class="nav-link" data-target="prompt" type="button">Prompt AI</button>
+        <button class="nav-link" data-target="reply" type="button">Reply DM</button>
+        <button class="nav-link" data-target="kalkulator" type="button">Kalkulator</button>
+        <button class="nav-link" data-target="riwayat" type="button">Riwayat</button>
       </nav>
-      <button class="theme-toggle" data-theme-toggle type="button">🌙 Dark Mode</button>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode">🌙 Dark mode</button>
     </aside>
 
-    <main class="page page-home">
+    <main class="main-content">
       <header class="topbar">
-        <a class="brand mobile-brand" href="index.html"><img src="icon.svg" alt="" class="brand-icon"><span>Digital Seller <strong>Super Tools</strong></span></a>
-        <button class="theme-toggle compact" data-theme-toggle type="button">🌙</button>
+        <a class="brand mobile-brand" href="#dashboard" data-target="dashboard"><img src="icon.svg" alt="" class="brand-icon"><span><strong>Esenef17</strong><small>Affiliate Tools</small></span></a>
+        <button class="theme-toggle compact" id="themeToggleMobile" type="button" aria-label="Toggle dark mode">🌙</button>
       </header>
 
-      <section class="hero glass-card">
-        <div class="hero-copy">
-          <span class="eyebrow">PWA premium buat seller digital</span>
-          <h1>Satu tempat buat bantu promosi, catat penjualan, dan pantau cuan digitalmu.</h1>
-          <p>Tools ringan untuk affiliate, produk digital, jualan aplikasi premium, langganan AI, dan pemasukan online lainnya.</p>
-          <div class="hero-actions">
-            <a class="btn primary" href="tools-affiliate.html">Masuk Tools Affiliate</a>
-            <a class="btn secondary" href="buku-keuangan.html">Buka Buku Keuangan</a>
+      <section id="dashboard" class="page-section active" data-title="Dashboard">
+        <div class="hero card gradient-card">
+          <div>
+            <p class="eyebrow">Esenef17 Affiliate Tools</p>
+            <h1>Tools affiliate buat bantu kamu cari angle, bikin konten, dan promosi tanpa blank.</h1>
+            <p class="hero-sub">Cocok buat pemula affiliate Shopee/TikTok, produk digital, dan seller yang jualan dari HP.</p>
+            <p class="brand-mark">by esenef17</p>
+            <div class="hero-actions">
+              <button class="btn primary" data-target="riset" type="button">Mulai Riset Produk</button>
+              <button class="btn secondary" data-target="hook" type="button">Buat Hook</button>
+              <button class="btn ghost" data-target="caption" type="button">Buat Caption</button>
+            </div>
+          </div>
+          <div class="hero-preview" aria-hidden="true">
+            <div class="preview-pill">Affiliate ready</div>
+            <div class="score-ring"><span>87</span><small>skor potensi</small></div>
+            <div class="mini-lines"><i></i><i></i><i></i></div>
           </div>
         </div>
-        <div class="hero-panel">
-          <div class="mini-window"><span></span><span></span><span></span></div>
-          <div class="metric-row"><span>Profit bulan ini</span><strong id="homeHeroProfit">Rp0</strong></div>
-          <div class="spark-bars"><i style="height:38%"></i><i style="height:68%"></i><i style="height:50%"></i><i style="height:84%"></i><i style="height:64%"></i></div>
-          <p class="muted">Offline-ready, localStorage, tanpa backend.</p>
+
+        <div class="section-heading">
+          <div><p class="eyebrow">Fitur utama</p><h2>Pilih tool sesuai kebutuhan promosi hari ini</h2></div>
+        </div>
+        <div class="feature-grid" id="featureGrid"></div>
+
+        <div class="card about-card">
+          <p class="eyebrow">About</p>
+          <h2>Dibuat untuk affiliator yang butuh workflow cepat dari HP.</h2>
+          <p>Esenef17 Affiliate Tools membantu kamu merapikan ide promosi, dari riset produk sampai reply DM, tanpa backend dan tanpa database server. Semua riwayat disimpan lokal di perangkat kamu.</p>
+          <strong>by esenef17</strong>
         </div>
       </section>
 
-      <section class="section-grid features-grid">
-        <article class="feature-card"><div class="feature-icon">⚡</div><h2>Tools Affiliate</h2><p>Buat hook, caption, CTA, script video, dan ide konten promosi.</p></article>
-        <article class="feature-card"><div class="feature-icon">💸</div><h2>Buku Keuangan Digital</h2><p>Catat pemasukan manual dan lihat rekap omzet, modal, profit per bulan.</p></article>
-        <article class="feature-card"><div class="feature-icon">📲</div><h2>PWA Offline</h2><p>Bisa dipasang ke layar utama HP dan tetap bisa dipakai offline setelah dibuka pertama kali.</p></article>
-      </section>
-
-      <section class="dashboard-card">
-        <div class="section-title"><div><span class="eyebrow">Snapshot</span><h2>Ringkasan penjualan bulan ini</h2></div><a class="btn ghost" href="buku-keuangan.html">Kelola transaksi</a></div>
-        <div id="homeSalesOverview" class="overview-grid"></div>
-      </section>
-
-      <section class="dashboard-card">
-        <div class="section-title"><div><span class="eyebrow">Cocok untuk</span><h2>Seller yang butuh tools simpel tapi powerfull</h2></div></div>
-        <div class="chips-list">
-          <span>Digital seller</span><span>Affiliate Shopee/TikTok</span><span>Penjual APK premium</span><span>Penjual akses AI premium</span><span>Pemula yang jualan dari HP</span><span>Kreator yang mau tracking pemasukan</span>
+      <section id="riset" class="page-section" data-title="Riset Produk">
+        <div class="tool-layout">
+          <form class="card tool-form" data-tool="riset"><div class="form-head"><p class="eyebrow">Riset Produk Affiliate</p><h2>Cek potensi produk sebelum dipromosikan</h2></div><div class="form-grid">
+            <label>Nama produk<input name="produk" required placeholder="Contoh: Rak dapur lipat"></label><label>Kategori/niche produk<input name="niche" required placeholder="Home living, skincare, digital..."></label><label>Target audiens<input name="target" required placeholder="Ibu muda, mahasiswa, kreator..."></label><label>Harga produk<input name="harga" type="number" min="0" placeholder="99000"></label><label>Estimasi komisi %<input name="komisi" type="number" min="0" max="100" placeholder="10"></label><label>Platform affiliate<select name="platform"><option>Shopee</option><option>TikTok Shop</option><option>Produk Digital</option><option>Lainnya</option></select></label><label>Masalah utama audiens<textarea name="masalah" required placeholder="Masalah yang paling sering mereka rasakan"></textarea></label><label>Benefit produk<textarea name="benefit" required placeholder="Manfaat utama yang jelas terlihat"></textarea></label><label>Tingkat kompetisi<select name="kompetisi"><option>Rendah</option><option>Sedang</option><option>Tinggi</option></select></label><label>Potensi viral<select name="viral"><option>Sedang</option><option>Rendah</option><option>Tinggi</option></select></label>
+          </div><button class="btn primary full" type="submit">Generate Riset</button></form><div class="output card" id="output-riset"></div>
         </div>
       </section>
+
+      <section id="angle" class="page-section" data-title="Angle">
+        <div class="tool-layout"><form class="card tool-form" data-tool="angle"><div class="form-head"><p class="eyebrow">Generator Angle Produk</p><h2>Bikin banyak sudut promosi yang tetap natural</h2></div><div class="form-grid"><label>Nama produk<input name="produk" required></label><label>Target audiens<input name="target" required></label><label>Masalah audiens<textarea name="masalah" required></textarea></label><label>Benefit produk<textarea name="benefit" required></textarea></label><label>Platform konten<input name="platform" placeholder="TikTok, IG, Threads..."></label></div><button class="btn primary full" type="submit">Generate Angle</button></form><div class="output card" id="output-angle"></div></div>
+      </section>
+
+      <section id="hook" class="page-section" data-title="Hook">
+        <div class="tool-layout"><form class="card tool-form" data-tool="hook"><div class="form-head"><p class="eyebrow">Hook Generator</p><h2>Buka konten dengan kalimat yang bikin orang berhenti scroll</h2></div><div class="form-grid"><label>Nama produk<input name="produk" required></label><label>Target audiens<input name="target" required></label><label>Masalah audiens<textarea name="masalah" required></textarea></label><label>Tone bahasa<select name="tone"><option>Casual Gen Z</option><option>Soft selling</option><option>Storytelling</option><option>Edukatif</option><option>Provokatif halus</option><option>Profesional santai</option><option>Relate pemula</option></select></label><label>Platform<input name="platform" placeholder="TikTok/Reels/Threads"></label></div><button class="btn primary full" type="submit">Generate Hook</button></form><div class="output card" id="output-hook"></div></div>
+      </section>
+
+      <section id="caption" class="page-section" data-title="Caption">
+        <div class="tool-layout"><form class="card tool-form" data-tool="caption"><div class="form-head"><p class="eyebrow">Caption Generator</p><h2>Caption human-friendly dengan struktur jelas</h2></div><div class="form-grid"><label>Nama produk<input name="produk" required></label><label>Kategori produk<input name="kategori" required></label><label>Target audiens<input name="target" required></label><label>Masalah audiens<textarea name="masalah" required></textarea></label><label>Benefit utama<textarea name="benefit" required></textarea></label><label>Platform<input name="platform" placeholder="IG, TikTok, WA..."></label><label>CTA tujuan<select name="tujuan"><option>Komen</option><option>DM</option><option>Cek bio</option><option>Klik link</option><option>Simpan postingan</option></select></label></div><button class="btn primary full" type="submit">Generate Caption</button></form><div class="output card" id="output-caption"></div></div>
+      </section>
+
+      <section id="cta" class="page-section" data-title="CTA">
+        <div class="tool-layout"><form class="card tool-form" data-tool="cta"><div class="form-head"><p class="eyebrow">CTA Generator</p><h2>Ajakan action yang halus dan tidak maksa</h2></div><div class="form-grid"><label>Tujuan CTA<input name="tujuan" required placeholder="Komen, DM, cek bio..."></label><label>Platform<input name="platform" placeholder="TikTok, IG, Threads, WA"></label><label>Gaya bahasa<select name="gaya"><option>Santai</option><option>Ramah</option><option>Soft selling</option><option>Urgent halus</option><option>Follow up</option></select></label></div><button class="btn primary full" type="submit">Generate CTA</button></form><div class="output card" id="output-cta"></div></div>
+      </section>
+
+      <section id="script" class="page-section" data-title="Script Video">
+        <div class="tool-layout"><form class="card tool-form" data-tool="script"><div class="form-head"><p class="eyebrow">Script Video Pendek</p><h2>Susun video pendek dari hook sampai CTA</h2></div><div class="form-grid"><label>Nama produk<input name="produk" required></label><label>Target audiens<input name="target" required></label><label>Masalah audiens<textarea name="masalah" required></textarea></label><label>Benefit produk<textarea name="benefit" required></textarea></label><label>Durasi<select name="durasi"><option>15 detik</option><option>30 detik</option><option>60 detik</option></select></label><label>Platform<select name="platform"><option>TikTok</option><option>Reels</option><option>Shorts</option></select></label></div><button class="btn primary full" type="submit">Generate Script</button></form><div class="output card" id="output-script"></div></div>
+      </section>
+
+      <section id="ide" class="page-section" data-title="Ide Konten">
+        <div class="tool-layout"><form class="card tool-form" data-tool="ide"><div class="form-head"><p class="eyebrow">Ide Konten 30 Hari</p><h2>Kalender konten biar promosi konsisten</h2></div><div class="form-grid"><label>Niche<input name="niche" required></label><label>Nama produk<input name="produk" required></label><label>Target audiens<input name="target" required></label><label>Platform<input name="platform" placeholder="TikTok, IG, Threads"></label><label>Tujuan<select name="tujuan"><option>Awareness</option><option>Engagement</option><option>DM masuk</option><option>Closing</option><option>Edukasi</option></select></label></div><button class="btn primary full" type="submit">Generate 30 Ide</button></form><div class="output card" id="output-ide"></div></div>
+      </section>
+
+      <section id="prompt" class="page-section" data-title="Prompt AI">
+        <div class="card"><div class="form-head"><p class="eyebrow">Prompt AI Library</p><h2>Prompt siap copy untuk ChatGPT/Codex/AI lain</h2></div><div id="promptLibrary" class="prompt-grid"></div></div>
+      </section>
+
+      <section id="reply" class="page-section" data-title="Reply DM">
+        <div class="tool-layout"><form class="card tool-form" data-tool="reply"><div class="form-head"><p class="eyebrow">Reply Komentar / DM</p><h2>Balasan natural untuk calon pembeli</h2></div><div class="form-grid"><label>Pertanyaan calon pembeli<textarea name="pertanyaan" required></textarea></label><label>Nama produk<input name="produk" required></label><label>Kondisi calon pembeli<select name="kondisi"><option>Tanya harga</option><option>Tanya aman atau tidak</option><option>Minta bukti</option><option>Bilang mahal</option><option>Masih ragu</option><option>Minta diskon</option><option>Mau beli</option></select></label><label>Gaya balasan<select name="gaya"><option>Santai</option><option>Ramah</option><option>Trust building</option><option>Closing halus</option><option>Follow up</option></select></label></div><button class="btn primary full" type="submit">Generate Balasan</button></form><div class="output card" id="output-reply"></div></div>
+      </section>
+
+      <section id="kalkulator" class="page-section" data-title="Kalkulator">
+        <div class="tool-layout"><form class="card tool-form" data-tool="kalkulator"><div class="form-head"><p class="eyebrow">Kalkulator Komisi</p><h2>Hitung target promosi affiliate secara simpel</h2></div><div class="form-grid"><label>Harga produk<input name="harga" type="number" min="0" required></label><label>Persentase komisi<input name="komisi" type="number" min="0" max="100" required></label><label>Jumlah produk terjual<input name="terjual" type="number" min="0" required></label><label>Target penghasilan<input name="target" type="number" min="0" required></label><label>Estimasi closing rate %<input name="closing" type="number" min="0.1" max="100" step="0.1" required></label></div><button class="btn primary full" type="submit">Hitung Komisi</button></form><div class="output card" id="output-kalkulator"></div></div>
+      </section>
+
+      <section id="riwayat" class="page-section" data-title="Riwayat">
+        <div class="card history-card"><div class="section-heading"><div><p class="eyebrow">Riwayat Generate</p><h2>Hasil yang kamu simpan</h2></div><div class="history-actions"><button class="btn secondary" id="exportJson" type="button">Export JSON</button><label class="btn ghost import-label">Import JSON<input id="importJson" type="file" accept="application/json" hidden></label><button class="btn ghost" id="exportAllTxt" type="button">Export TXT</button><button class="btn danger" id="clearHistory" type="button">Hapus Semua</button></div></div><div id="historyList" class="history-list"></div></div>
+      </section>
+
+      <footer class="footer">Esenef17 Affiliate Tools <span>by esenef17</span></footer>
     </main>
   </div>
 
-  <nav class="bottom-nav" aria-label="Navigasi mobile"><a class="active" href="index.html">🏠<span>Home</span></a><a href="tools-affiliate.html">⚡<span>Tools</span></a><a href="buku-keuangan.html">💸<span>Buku</span></a></nav>
+  <nav class="bottom-nav" aria-label="Navigasi mobile">
+    <button class="nav-link active" data-target="dashboard" type="button"><span>⌂</span><small>Dashboard</small></button>
+    <button class="nav-link" data-target="riset" type="button"><span>⌕</span><small>Riset</small></button>
+    <button class="nav-link" data-target="hook" type="button"><span>✦</span><small>Hook</small></button>
+    <button class="nav-link" data-target="caption" type="button"><span>✎</span><small>Caption</small></button>
+    <button class="nav-link" data-target="riwayat" type="button"><span>◷</span><small>Riwayat</small></button>
+  </nav>
+
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="script.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('service-worker.js'));
+    }
+  </script>
 </body>
 </html>
