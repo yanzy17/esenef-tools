@@ -1,114 +1,219 @@
-# Digital Seller Super Tools
+# Esenef17 Affiliate Tools
 
-Digital Seller Super Tools adalah web app/PWA premium untuk digital seller, affiliator, dan penjual produk digital yang ingin bekerja langsung dari HP. Project ini pure frontend: tanpa React, tanpa Node.js, tanpa backend, tanpa database server, dan tanpa library berat.
+**Esenef17 Affiliate Tools** adalah web app/PWA ringan untuk membantu affiliator, digital seller, kreator konten jualan, dan pemula yang sering bingung saat harus riset produk, bikin hook, caption, CTA, script video, ide konten, prompt AI, sampai balas komentar/DM calon pembeli.
+
+Branding project: **by esenef17**.
+
+Project ini fokus 100% untuk tools affiliate dan promosi produk. Tidak ada fitur buku keuangan, sales tracker, catatan pemasukan, omzet, atau profit tracker transaksi.
 
 ## Fungsi Project
 
-- Membantu promosi produk affiliate atau produk digital dengan generator angle, hook, caption, CTA, script video, ide konten, prompt AI, dan balasan DM.
-- Mencatat pemasukan manual dari banyak sumber seperti WhatsApp, Lynk ID, QRIS, marketplace, affiliate, APK premium, akses AI premium, dan jasa.
-- Menampilkan rekap omzet, modal, profit, target bulanan, produk laris, sumber terbesar, metode pembayaran utama, dan chart sederhana.
-- Bisa di-install ke layar utama HP sebagai PWA dan tetap bisa dipakai offline setelah dibuka pertama kali.
+- Membantu pemula affiliate Shopee dan TikTok memilih angle promosi yang lebih jelas.
+- Membantu penjual produk digital membuat bahan promosi dari HP.
+- Membantu kreator konten jualan membuat hook, caption, CTA, script video, dan ide konten harian.
+- Menyediakan prompt siap copy untuk dipakai di ChatGPT, Codex, atau AI lain.
+- Menyimpan hasil generate ke riwayat lokal menggunakan `localStorage`.
+- Bisa di-install sebagai PWA dan dapat berjalan offline setelah pertama kali dibuka.
 
-## Daftar Halaman
+## Fitur Utama
 
-1. `index.html` — landing page utama dan pusat navigasi tools.
-2. `tools-affiliate.html` — Tools Affiliate / Tools Jualan.
-3. `buku-keuangan.html` — Buku Keuangan Digital / Sales Tracker.
+1. **Dashboard** — halaman utama dengan hero, quick action, daftar fitur, dan bagian about by esenef17.
+2. **Riset Produk Affiliate** — menghitung skor potensi produk 1-100, alasan kelayakan, target audiens, pain point, benefit, angle, jenis konten, hook, CTA, dan risiko.
+3. **Generator Angle Produk** — menghasilkan angle promosi, edukasi, storytelling, soft selling, problem-solution, dan kontroversial halus.
+4. **Hook Generator** — menghasilkan hook pendek, Threads, TikTok/Reels, edukasi, storytelling, soft selling, dan clickbait halus.
+5. **Caption Generator** — membuat caption pendek sampai Telegram dengan format Hook, Body, Solusi, Benefit, CTA.
+6. **CTA Generator** — membuat CTA komen, DM, cek bio, soft selling, urgent halus, dan follow up.
+7. **Script Video Pendek** — membuat script 15/30/60 detik plus ide visual, overlay, voice over, CTA, dan versi tanpa wajah.
+8. **Ide Konten 30 Hari** — membuat kalender konten harian lengkap dengan format, hook, isi, CTA, dan catatan visual.
+9. **Prompt AI Library** — prompt siap copy untuk riset, angle, hook, caption, CTA, script video, reply DM, edukasi produk, ide konten 30 hari, dan evaluasi konten.
+10. **Reply Komentar / DM** — membuat balasan singkat, trust building, closing halus, dan follow up.
+11. **Kalkulator Komisi** — menghitung komisi per penjualan, total komisi, penjualan yang dibutuhkan, estimasi traffic/leads, dan catatan motivasi.
+12. **Riwayat Generate** — menyimpan, copy, hapus, export TXT, export JSON, dan import JSON.
 
-## Cara Pakai Landing Page
+## Cara Pakai Setiap Tools
 
-1. Buka `index.html` di browser.
-2. Gunakan tombol **Masuk Tools Affiliate** untuk membuat bahan promosi.
-3. Gunakan tombol **Buka Buku Keuangan** untuk mencatat transaksi.
-4. Ringkasan penjualan bulan ini akan tampil otomatis dari data localStorage Buku Keuangan.
+### Dashboard
 
-## Cara Pakai Tools Affiliate
+1. Buka `index.html`.
+2. Gunakan quick action **Mulai Riset Produk**, **Buat Hook**, atau **Buat Caption**.
+3. Di HP, gunakan bottom navigation untuk akses cepat.
+4. Di desktop, gunakan sidebar untuk membuka semua tools.
 
-1. Buka `tools-affiliate.html`.
-2. Pilih menu tool: Riset Angle Produk, Hook Generator, Caption Generator, CTA Generator, Script Video Pendek, Ide Konten, Prompt AI, Reply Komentar/DM, atau Kalkulator Komisi.
-3. Isi field produk, niche, target audiens, masalah audiens, benefit, platform, tone, dan tujuan konten.
-4. Klik **Generate Sekarang**.
-5. Hasil otomatis tersimpan di **Riwayat Generate**.
-6. Dari riwayat, kamu bisa copy hasil, hapus item, export TXT, atau export JSON.
+### Riset Produk Affiliate
 
-## Cara Pakai Buku Keuangan
+1. Buka menu **Riset Produk**.
+2. Isi nama produk, niche, target audiens, harga, estimasi komisi, platform, masalah audiens, benefit, kompetisi, dan potensi viral.
+3. Klik **Generate Riset**.
+4. Aplikasi akan menampilkan skor potensi 1-100, alasan kelayakan, angle, ide konten, hook, CTA, dan risiko.
 
-1. Buka `buku-keuangan.html`.
-2. Pilih bulan aktif dari dropdown atau chip bulan.
-3. Masuk ke tab **Tambah Transaksi** untuk mencatat penjualan.
-4. Pantau omzet, modal, profit, produk paling laris, sumber terbesar, metode utama, refund, dan transaksi belum lunas di tab **Dashboard**.
-5. Gunakan tab **Transaksi** untuk search, filter, sort, edit, hapus, dan duplikat transaksi.
-6. Gunakan tab **Produk** untuk menyimpan produk yang sering dijual agar form transaksi bisa terisi otomatis.
-7. Gunakan tab **Rekap** untuk melihat performa semua waktu.
+Scoring sederhana mempertimbangkan:
 
-## Cara Tambah Transaksi
+- Harga ramah pemula menambah skor.
+- Komisi besar menambah skor.
+- Potensi viral tinggi menambah skor.
+- Kompetisi tinggi mengurangi skor.
+- Benefit jelas menambah skor.
+- Pain point jelas menambah skor.
 
-1. Masuk tab **Tambah Transaksi**.
-2. Isi tanggal, nama produk, kategori, sumber penjualan, jumlah terjual, modal, harga jual, diskon, fee admin, metode pembayaran, status, dan catatan.
-3. Keuntungan dihitung otomatis dengan rumus:
+### Generator Angle Produk
 
-   ```text
-   Keuntungan = (jumlah terjual x harga jual) - modal - diskon - biaya admin
-   ```
+1. Buka menu **Angle**.
+2. Isi produk, target audiens, masalah, benefit, dan platform konten.
+3. Klik **Generate Angle**.
+4. Hasil berisi 15 angle promosi serta 5 angle untuk edukasi, storytelling, soft selling, problem-solution, dan kontroversial halus.
 
-4. Klik **Simpan Transaksi**.
-5. Jika status transaksi adalah **Refund**, transaksi tetap muncul di riwayat tetapi tidak dihitung ke omzet aktif dan profit aktif.
+### Hook Generator
 
-## Mode Tambah Cepat HP
+1. Buka menu **Hook**.
+2. Isi produk, target audiens, masalah, tone bahasa, dan platform.
+3. Klik **Generate Hook**.
+4. Hasil berisi hook pendek, Threads, TikTok/Reels, edukasi, storytelling, soft selling, dan clickbait halus.
 
-1. Masuk tab **Tambah Transaksi**.
-2. Klik **Mode Tambah Cepat HP**.
-3. Isi tanggal, nama produk, harga jual, modal, sumber penjualan, dan metode pembayaran.
-4. Klik **Simpan Cepat**.
+### Caption Generator
 
-## Cara Lihat Rekap Bulan
+1. Buka menu **Caption**.
+2. Isi produk, kategori, target audiens, masalah, benefit, platform, dan tujuan CTA.
+3. Klik **Generate Caption**.
+4. Hasil caption memakai format: Hook, Body, Solusi, Benefit, CTA.
 
-1. Pilih bulan aktif dari dropdown atau chip bulan.
-2. Tab **Dashboard** dan **Transaksi** otomatis menyesuaikan bulan tersebut.
-3. Klik **Copy Ringkasan Bulan** di tab Transaksi untuk menyalin format rekap bulanan siap kirim.
-4. Buka tab **Rekap** untuk melihat total semua waktu, rekap omzet per bulan, rekap profit per bulan, bulan terbaik, produk terlaris, sumber terbesar, dan metode pembayaran paling sering.
+### CTA Generator
 
-## Backup, Export, Import
+1. Buka menu **CTA**.
+2. Isi tujuan CTA, platform, dan gaya bahasa.
+3. Klik **Generate CTA**.
+4. Hasil berisi CTA komen, DM, cek bio, soft selling, urgent halus, dan follow up.
 
-Buka tab **Pengaturan** di Buku Keuangan.
+### Script Video Pendek
 
-- **Export Semua Data JSON**: mengunduh transaksi, produk cepat, target bulanan, dan setting dark mode.
-- **Import JSON**: memasukkan kembali file backup JSON.
-- **Export CSV Bulan Aktif**: mengunduh transaksi dari bulan yang sedang dipilih.
-- **Export Semua Transaksi CSV**: mengunduh semua transaksi.
+1. Buka menu **Script Video**.
+2. Isi produk, target audiens, masalah, benefit, durasi, dan platform.
+3. Klik **Generate Script**.
+4. Hasil berisi scene hook, masalah, solusi, benefit, CTA, ide visual, teks overlay, voice over, dan versi produksi tanpa wajah.
 
-## Cara Reset Data
+### Ide Konten 30 Hari
 
-1. Buka `buku-keuangan.html`.
-2. Masuk tab **Pengaturan**.
-3. Klik **Reset Semua Data**.
-4. Ketik `RESET` saat diminta.
-5. Semua transaksi, produk cepat, target bulanan, dan riwayat generate akan dihapus dari browser.
+1. Buka menu **Ide Konten**.
+2. Isi niche, nama produk, target audiens, platform, dan tujuan.
+3. Klik **Generate 30 Ide**.
+4. Aplikasi membuat 30 ide konten harian dengan kategori edukasi, storytelling, problem solution, review, comparison, mistake, tips, before after, FAQ, dan soft selling.
 
-## Deploy ke GitHub Pages
+### Prompt AI Library
 
-1. Push semua file ke repository GitHub.
-2. Masuk ke **Settings → Pages**.
-3. Pada bagian **Build and deployment**, pilih source branch yang berisi file ini, misalnya `main`.
-4. Pilih folder root `/`.
-5. Simpan dan tunggu URL GitHub Pages aktif.
+1. Buka menu **Prompt AI**.
+2. Pilih prompt sesuai kebutuhan.
+3. Klik **Copy prompt**.
+4. Tempel prompt ke ChatGPT, Codex, atau AI lain, lalu ganti placeholder seperti `[produk]`, `[target]`, dan `[masalah]`.
 
-## Deploy ke Netlify
+### Reply Komentar / DM
+
+1. Buka menu **Reply DM**.
+2. Isi pertanyaan calon pembeli, nama produk, kondisi calon pembeli, dan gaya balasan.
+3. Klik **Generate Balasan**.
+4. Copy balasan yang paling cocok dan sesuaikan sedikit agar makin natural.
+
+### Kalkulator Komisi
+
+1. Buka menu **Kalkulator**.
+2. Isi harga produk, persentase komisi, jumlah produk terjual, target penghasilan, dan estimasi closing rate.
+3. Klik **Hitung Komisi**.
+4. Hasil akan menampilkan:
+   - Komisi per penjualan = harga produk x persen komisi.
+   - Total komisi = komisi per penjualan x jumlah terjual.
+   - Penjualan untuk target = target penghasilan / komisi per penjualan.
+   - Estimasi traffic/leads berdasarkan closing rate.
+
+## Cara Simpan Riwayat
+
+1. Generate hasil dari tool apa pun.
+2. Klik **Simpan ke riwayat** pada card hasil.
+3. Buka menu **Riwayat** untuk melihat semua hasil yang disimpan.
+
+Data riwayat disimpan di `localStorage` browser/perangkat. Artinya data tetap privat di perangkat kamu, tetapi bisa hilang jika cache/site data browser dihapus.
+
+## Cara Export / Import Riwayat
+
+### Export TXT per hasil
+
+1. Generate hasil dari tool apa pun.
+2. Klik **Export TXT** di card hasil.
+3. File `.txt` akan terunduh.
+
+### Export semua riwayat TXT
+
+1. Buka menu **Riwayat**.
+2. Klik **Export TXT**.
+
+### Export JSON
+
+1. Buka menu **Riwayat**.
+2. Klik **Export JSON**.
+3. Simpan file backup agar bisa dipindahkan ke perangkat lain.
+
+### Import JSON
+
+1. Buka menu **Riwayat**.
+2. Klik **Import JSON**.
+3. Pilih file JSON hasil export sebelumnya.
+4. Data akan ditambahkan ke riwayat yang sudah ada.
+
+## Cara Deploy ke GitHub Pages
+
+1. Upload semua file project ke repository GitHub:
+   - `index.html`
+   - `style.css`
+   - `script.js`
+   - `manifest.json`
+   - `service-worker.js`
+   - `icon.svg`
+   - `README.md`
+2. Buka **Settings** repository.
+3. Masuk ke **Pages**.
+4. Pada bagian **Build and deployment**, pilih branch utama, misalnya `main`.
+5. Pilih folder `/root` jika file berada di root repository.
+6. Klik **Save**.
+7. Tunggu URL GitHub Pages aktif.
+
+## Cara Deploy ke Netlify
 
 1. Login ke Netlify.
-2. Pilih **Add new site → Deploy manually**.
-3. Drag-and-drop folder project ini ke Netlify.
-4. Karena project ini static frontend, tidak perlu build command.
-5. Publish directory cukup root project.
+2. Pilih **Add new site**.
+3. Pilih **Deploy manually** atau hubungkan repository GitHub.
+4. Jika deploy manual, drag-and-drop folder project ini.
+5. Tidak perlu build command karena project pure frontend.
+6. Publish directory cukup root folder project.
 
 ## Cara Install ke Layar Utama HP
 
-1. Buka website dari Chrome Android.
-2. Tunggu halaman selesai dibuka minimal satu kali agar service worker mencache file.
-3. Ketuk menu browser.
-4. Pilih **Install app** atau **Add to Home screen**.
-5. Buka dari ikon di layar utama untuk pengalaman seperti aplikasi.
+### Android / Chrome
 
-## Catatan Data localStorage
+1. Buka URL app di Chrome.
+2. Tunggu halaman selesai dimuat.
+3. Tap menu titik tiga.
+4. Pilih **Add to Home screen** atau **Install app**.
+5. Buka dari ikon di layar utama.
 
-Semua data tersimpan di browser/localStorage perangkat pengguna. Data tidak dikirim ke server mana pun. Jika cache/browser dibersihkan, data bisa hilang. Selalu gunakan fitur export JSON untuk backup berkala.
+### iPhone / Safari
+
+1. Buka URL app di Safari.
+2. Tap tombol **Share**.
+3. Pilih **Add to Home Screen**.
+4. Tap **Add**.
+
+## Catatan Teknis
+
+- Pure frontend.
+- Tanpa React.
+- Tanpa Node.js.
+- Tanpa backend.
+- Tanpa database server.
+- Tanpa framework berat.
+- Bisa berjalan di GitHub Pages dan Netlify.
+- Riwayat generate disimpan di `localStorage`.
+- PWA menggunakan `manifest.json`, `service-worker.js`, dan `icon.svg`.
+- File utama dicache agar bisa offline setelah pertama kali dibuka.
+
+## Branding
+
+Dibuat sebagai **Esenef17 Affiliate Tools**.
+
+**by esenef17**

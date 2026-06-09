@@ -1,14 +1,19 @@
 {
-  "name": "Digital Seller Super Tools",
-  "short_name": "Seller Tools",
-  "description": "PWA premium untuk digital seller, affiliator, dan penjual produk digital dari HP.",
-  "start_url": "index.html",
+  "name": "Esenef17 Affiliate Tools",
+  "short_name": "Esenef17 Tools",
+  "description": "PWA ringan untuk riset produk, hook, caption, CTA, script video, ide konten, prompt AI, reply DM, dan kalkulator komisi affiliate.",
+  "start_url": "./index.html",
   "scope": "./",
-  "display": "standalone",
+  "display": "fullscreen",
   "orientation": "portrait-primary",
-  "background_color": "#f4fbf8",
+  "background_color": "#071411",
   "theme_color": "#10b981",
   "icons": [
-    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
   ]
 }
