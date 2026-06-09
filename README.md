@@ -1,114 +1,282 @@
-# Digital Seller Super Tools
+# Esenef Tools — Digital Seller Assistant
 
-Digital Seller Super Tools adalah web app/PWA premium untuk digital seller, affiliator, dan penjual produk digital yang ingin bekerja langsung dari HP. Project ini pure frontend: tanpa React, tanpa Node.js, tanpa backend, tanpa database server, dan tanpa library berat.
+**Esenef Tools / Digital Seller Assistant** adalah web app ringan untuk membantu pemula mikirin strategi promosi produk dari nol. User cukup masukin nama produk, lalu tools akan bantu menyusun target audiens, angle jualan, hook, caption, CTA, script video, balasan DM, dan rencana posting 5 hari.
 
-## Fungsi Project
+Branding: **by esenef17**.
 
-- Membantu promosi produk affiliate atau produk digital dengan generator angle, hook, caption, CTA, script video, ide konten, prompt AI, dan balasan DM.
-- Mencatat pemasukan manual dari banyak sumber seperti WhatsApp, Lynk ID, QRIS, marketplace, affiliate, APK premium, akses AI premium, dan jasa.
-- Menampilkan rekap omzet, modal, profit, target bulanan, produk laris, sumber terbesar, metode pembayaran utama, dan chart sederhana.
-- Bisa di-install ke layar utama HP sebagai PWA dan tetap bisa dipakai offline setelah dibuka pertama kali.
+## Fungsi Utama
 
-## Daftar Halaman
+Tools ini dibuat untuk menjawab masalah pemula yang sering bingung saat mau promosi produk:
 
-1. `index.html` — landing page utama dan pusat navigasi tools.
-2. `tools-affiliate.html` — Tools Affiliate / Tools Jualan.
-3. `buku-keuangan.html` — Buku Keuangan Digital / Sales Tracker.
+- Produk ini cocok dijual ke siapa?
+- Masalah audiensnya apa?
+- Angle promosi yang paling masuk akal apa?
+- Hook yang relate gimana?
+- Caption yang natural dan ga kaku gimana?
+- CTA yang ga maksa gimana?
+- Ide video pertama harus seperti apa?
+- Balas DM calon pembeli pakai bahasa apa?
+- Besok harus posting konten apa?
 
-## Cara Pakai Landing Page
+Fokus utamanya bukan membuat banyak menu, tapi membuat **1 alur utama yang kuat**:
+
+```text
+Masukin produk → tools bantu mikirin strategi → keluar paket konten siap posting
+```
+
+## Target User
+
+Digital Seller Assistant cocok untuk:
+
+- Pemula produk digital.
+- Affiliate Shopee/TikTok.
+- Reseller digital.
+- Kreator konten jualan.
+- Ibu rumah tangga yang jualan dari HP.
+- Pelajar yang mau mulai jualan pelan-pelan.
+- Orang yang sudah punya produk tapi bingung cara promosi.
+
+## Cara Pakai
 
 1. Buka `index.html` di browser.
-2. Gunakan tombol **Masuk Tools Affiliate** untuk membuat bahan promosi.
-3. Gunakan tombol **Buka Buku Keuangan** untuk mencatat transaksi.
-4. Ringkasan penjualan bulan ini akan tampil otomatis dari data localStorage Buku Keuangan.
+2. Isi field wajib **Nama produk**.
+   - Contoh: `Paket Produk Digital Siap Jual`.
+   - Contoh: `Sunscreen SPF 50`.
+   - Contoh: `Rice Cooker Mini`.
+3. Field lain boleh dibiarkan default, atau disesuaikan:
+   - Jenis produk.
+   - Platform promosi.
+   - Gaya konten.
+   - Level user.
+4. Klik **Generate Paket Promosi**.
+5. Tunggu loading singkat saat tools menyusun angle jualan.
+6. Copy bagian yang dibutuhkan, atau klik **Copy Semua** untuk menyalin seluruh paket.
 
-## Cara Pakai Tools Affiliate
+Kalau user cuma isi nama produk saja, tools tetap bisa menghasilkan paket lengkap dengan bantuan rule dan template kategori.
 
-1. Buka `tools-affiliate.html`.
-2. Pilih menu tool: Riset Angle Produk, Hook Generator, Caption Generator, CTA Generator, Script Video Pendek, Ide Konten, Prompt AI, Reply Komentar/DM, atau Kalkulator Komisi.
-3. Isi field produk, niche, target audiens, masalah audiens, benefit, platform, tone, dan tujuan konten.
-4. Klik **Generate Sekarang**.
-5. Hasil otomatis tersimpan di **Riwayat Generate**.
-6. Dari riwayat, kamu bisa copy hasil, hapus item, export TXT, atau export JSON.
+## Fitur Utama
 
-## Cara Pakai Buku Keuangan
+### 1. Buat Paket Promosi Lengkap
 
-1. Buka `buku-keuangan.html`.
-2. Pilih bulan aktif dari dropdown atau chip bulan.
-3. Masuk ke tab **Tambah Transaksi** untuk mencatat penjualan.
-4. Pantau omzet, modal, profit, produk paling laris, sumber terbesar, metode utama, refund, dan transaksi belum lunas di tab **Dashboard**.
-5. Gunakan tab **Transaksi** untuk search, filter, sort, edit, hapus, dan duplikat transaksi.
-6. Gunakan tab **Produk** untuk menyimpan produk yang sering dijual agar form transaksi bisa terisi otomatis.
-7. Gunakan tab **Rekap** untuk melihat performa semua waktu.
+Satu form sederhana untuk membuat strategi promosi siap pakai. Input wajib hanya nama produk, sedangkan input lain opsional untuk membuat hasil lebih spesifik.
 
-## Cara Tambah Transaksi
+Input yang tersedia:
 
-1. Masuk tab **Tambah Transaksi**.
-2. Isi tanggal, nama produk, kategori, sumber penjualan, jumlah terjual, modal, harga jual, diskon, fee admin, metode pembayaran, status, dan catatan.
-3. Keuntungan dihitung otomatis dengan rumus:
+- Nama produk.
+- Jenis produk:
+  - Produk Digital
+  - Affiliate Shopee
+  - TikTok Shop
+  - Fashion
+  - Skincare
+  - Alat Rumah
+  - Makanan
+  - Lainnya
+- Platform promosi:
+  - Threads
+  - TikTok
+  - Instagram
+  - WhatsApp
+  - Shopee Video
+- Gaya konten:
+  - Soft Selling
+  - Relate & Curhat
+  - Edukasi
+  - Review Jujur
+  - Viral Halus
+- Level user:
+  - Aku masih blank banget
+  - Aku udah punya produk tapi bingung promosi
+  - Aku butuh konten siap posting
 
-   ```text
-   Keuntungan = (jumlah terjual x harga jual) - modal - diskon - biaya admin
-   ```
+### 2. Analisis Produk Singkat
 
-4. Klik **Simpan Transaksi**.
-5. Jika status transaksi adalah **Refund**, transaksi tetap muncul di riwayat tetapi tidak dihitung ke omzet aktif dan profit aktif.
+Berisi analisis sederhana yang membantu user memahami:
 
-## Mode Tambah Cepat HP
+- Produk cocok dijual ke siapa.
+- Masalah utama audiens.
+- Alasan orang mungkin tertarik beli.
+- Angle promosi terbaik.
+- Kesalahan promosi yang harus dihindari.
 
-1. Masuk tab **Tambah Transaksi**.
-2. Klik **Mode Tambah Cepat HP**.
-3. Isi tanggal, nama produk, harga jual, modal, sumber penjualan, dan metode pembayaran.
-4. Klik **Simpan Cepat**.
+### 3. Target Audiens Otomatis
 
-## Cara Lihat Rekap Bulan
+Tools membuat 3 target audiens yang masuk akal. Setiap target berisi:
 
-1. Pilih bulan aktif dari dropdown atau chip bulan.
-2. Tab **Dashboard** dan **Transaksi** otomatis menyesuaikan bulan tersebut.
-3. Klik **Copy Ringkasan Bulan** di tab Transaksi untuk menyalin format rekap bulanan siap kirim.
-4. Buka tab **Rekap** untuk melihat total semua waktu, rekap omzet per bulan, rekap profit per bulan, bulan terbaik, produk terlaris, sumber terbesar, dan metode pembayaran paling sering.
+- Siapa mereka.
+- Masalah mereka.
+- Cara ngomong ke mereka.
 
-## Backup, Export, Import
+### 4. Angle Konten
 
-Buka tab **Pengaturan** di Buku Keuangan.
+Tools membuat 5 angle promosi. Setiap angle berisi:
 
-- **Export Semua Data JSON**: mengunduh transaksi, produk cepat, target bulanan, dan setting dark mode.
-- **Import JSON**: memasukkan kembali file backup JSON.
-- **Export CSV Bulan Aktif**: mengunduh transaksi dari bulan yang sedang dipilih.
-- **Export Semua Transaksi CSV**: mengunduh semua transaksi.
+- Nama angle.
+- Alasan kenapa angle ini kuat.
+- Contoh kalimat pembuka.
 
-## Cara Reset Data
+### 5. Hook Siap Pakai
 
-1. Buka `buku-keuangan.html`.
-2. Masuk tab **Pengaturan**.
-3. Klik **Reset Semua Data**.
-4. Ketik `RESET` saat diminta.
-5. Semua transaksi, produk cepat, target bulanan, dan riwayat generate akan dihapus dari browser.
+Tools membuat 10 hook natural yang cocok untuk Threads, TikTok, dan Instagram.
 
-## Deploy ke GitHub Pages
+Gaya hook dibuat casual dan tidak terlalu marketing, misalnya:
 
-1. Push semua file ke repository GitHub.
-2. Masuk ke **Settings → Pages**.
-3. Pada bagian **Build and deployment**, pilih source branch yang berisi file ini, misalnya `main`.
-4. Pilih folder root `/`.
-5. Simpan dan tunggu URL GitHub Pages aktif.
+- “jujur, banyak pemula bukan gagal karena malas. mereka cuma kebanyakan bingung duluan.”
+- “kadang yang bikin ga mulai jualan itu bukan modal, tapi ga tahu harus mulai dari mana.”
+- “kalau tiap mau posting malah blank, berarti masalahnya bukan di niat doang.”
 
-## Deploy ke Netlify
+### 6. Caption Siap Posting
+
+Tools membuat 3 caption berbeda:
+
+- Versi soft selling.
+- Versi storytelling / relate.
+- Versi edukasi singkat.
+
+Setiap caption dibuat dengan bahasa Indonesia casual, tidak terlalu panjang, dan cocok untuk pemula.
+
+### 7. CTA Siap Pakai
+
+Tools membuat 10 CTA campuran:
+
+- CTA komentar.
+- CTA DM.
+- CTA cek bio.
+- CTA soft selling.
+- CTA urgency halus.
+
+Contoh gaya CTA:
+
+- `komen “MAU” nanti aku spill isinya`
+- `DM aja kalau mau lihat detail paketnya`
+- `simpan dulu, siapa tahu nanti kamu butuh pas mulai jualan`
+
+### 8. Script Video Pendek
+
+Tools membuat 3 script video pendek durasi 15–30 detik untuk TikTok, Reels, atau Shopee Video.
+
+Setiap script berisi:
+
+- Opening.
+- Isi.
+- Closing.
+- Teks layar.
+- Ide visual.
+
+### 9. Balasan DM Calon Pembeli
+
+Tools membuat 5 template balasan DM untuk situasi umum:
+
+- Orang tanya “ini isinya apa?”
+- Orang tanya “cocok buat pemula ga?”
+- Orang tanya “bisa dijual ulang ga?”
+- Orang bilang “mahal”
+- Orang bilang “nanti dulu”
+
+Bahasa dibuat santai, sopan, dan terasa seperti chat manusia.
+
+### 10. Rencana Posting 5 Hari
+
+Tools membuat alur posting yang tidak random:
+
+- Hari 1: edukasi masalah.
+- Hari 2: konten relate.
+- Hari 3: soft selling.
+- Hari 4: bukti/manfaat.
+- Hari 5: closing/CTA.
+
+Setiap hari berisi tema konten, ide posting, hook, dan CTA.
+
+## Tombol UX
+
+Output menyediakan tombol:
+
+- **Copy Analisis**
+- **Copy Target Audiens**
+- **Copy Angle**
+- **Copy Hook**
+- **Copy Caption**
+- **Copy CTA**
+- **Copy Script**
+- **Copy DM**
+- **Copy Rencana Posting**
+- **Copy Semua**
+
+Ada juga tombol regenerate:
+
+- **Generate Ulang**
+- **Bikin Lebih Santai**
+- **Bikin Lebih Soft Selling**
+- **Bikin Lebih Relate**
+
+## Cara Kerja Generator
+
+Karena project ini static tanpa backend, generator memakai rule dan template lokal di `script.js`.
+
+Logic mempertimbangkan:
+
+- Jenis produk.
+- Platform promosi.
+- Gaya konten.
+- Level user.
+- Nama produk.
+
+Template kategori yang tersedia:
+
+- Produk Digital.
+- Affiliate Shopee.
+- TikTok Shop.
+- Skincare.
+- Fashion.
+- Alat Rumah.
+- Makanan.
+- Lainnya.
+
+Jika kategori dipilih **Lainnya**, tools tetap mencoba menebak konteks dari nama produk. Misalnya nama produk mengandung `sunscreen`, maka arahnya dibuat seperti skincare; jika mengandung `rice cooker`, arahnya dibuat seperti alat rumah.
+
+## Teknologi yang Digunakan
+
+- HTML.
+- CSS.
+- JavaScript vanilla.
+- PWA manifest.
+- Service worker untuk cache aset utama.
+- `localStorage` untuk menyimpan paket terakhir dan preferensi dark mode.
+
+Project ini:
+
+- Tanpa React.
+- Tanpa Node.js.
+- Tanpa backend.
+- Tanpa database server.
+- Tanpa framework berat.
+- Bisa jalan di GitHub Pages dan Netlify.
+
+## Catatan Data dan Backend
+
+Tools ini berjalan langsung di browser. Tidak ada data yang dikirim ke server karena tidak ada backend.
+
+Hasil generate dibuat secara lokal dari template JavaScript. Paket terakhir dan mode tema disimpan di `localStorage` perangkat/browser user.
+
+## Deploy Singkat
+
+### GitHub Pages
+
+1. Upload file project ke repository GitHub.
+2. Buka **Settings → Pages**.
+3. Pilih branch utama dan root folder.
+4. Simpan dan tunggu URL aktif.
+
+### Netlify
 
 1. Login ke Netlify.
-2. Pilih **Add new site → Deploy manually**.
-3. Drag-and-drop folder project ini ke Netlify.
-4. Karena project ini static frontend, tidak perlu build command.
+2. Pilih **Add new site**.
+3. Upload folder project atau hubungkan repository.
+4. Tidak perlu build command.
 5. Publish directory cukup root project.
 
-## Cara Install ke Layar Utama HP
+## Branding
 
-1. Buka website dari Chrome Android.
-2. Tunggu halaman selesai dibuka minimal satu kali agar service worker mencache file.
-3. Ketuk menu browser.
-4. Pilih **Install app** atau **Add to Home screen**.
-5. Buka dari ikon di layar utama untuk pengalaman seperti aplikasi.
+Dibuat untuk pemula yang pengen jualan lebih rapi, bukan makin pusing.
 
-## Catatan Data localStorage
-
-Semua data tersimpan di browser/localStorage perangkat pengguna. Data tidak dikirim ke server mana pun. Jika cache/browser dibersihkan, data bisa hilang. Selalu gunakan fitur export JSON untuk backup berkala.
+**by esenef17**
