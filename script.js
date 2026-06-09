@@ -5,6 +5,14 @@ const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 const clean = value => String(value || '').trim();
 
+const DEMO_VALUES = {
+  productName: 'Paket Produk Digital Siap Jual',
+  productType: 'Produk Digital',
+  platform: 'Threads',
+  contentStyle: 'Relate & Curhat',
+  userLevel: 'Aku masih blank banget'
+};
+
 const categoryRules = {
   'Produk Digital': {
     target: ['pemula yang pengen mulai jualan dari HP', 'reseller digital yang belum punya produk sendiri', 'kreator konten kecil yang butuh bahan jualan', 'ibu rumah tangga yang cari jualan fleksibel', 'pelajar yang mau mulai pelan-pelan'],
@@ -386,10 +394,10 @@ function setLoading(isLoading) {
   $('#generateButton').textContent = isLoading ? 'Lagi mikirin strateginya...' : 'Generate Paket Promosi';
 }
 
-function runGenerate(variant = 'default') {
+function runGenerate(variant = 'default', forcedValues = null) {
   const form = $('#promoForm');
-  if (!form.reportValidity()) return;
-  const values = getFormValues();
+  if (!forcedValues && !form.reportValidity()) return;
+  const values = forcedValues || getFormValues();
   $('#resultGrid').innerHTML = '';
   $('#resultActions').hidden = true;
   setLoading(true);
@@ -410,6 +418,18 @@ function runGenerate(variant = 'default') {
   }, 520);
 }
 
+function fillFormValues(values) {
+  Object.entries(values).forEach(([name, value]) => {
+    const field = $(`[name=\"${name}\"]`);
+    if (field) field.value = value;
+  });
+}
+
+function runDemoPackage() {
+  fillFormValues(DEMO_VALUES);
+  runGenerate('default', DEMO_VALUES);
+}
+
 function initTheme() {
   if (localStorage.getItem(THEME_KEY) === 'dark') document.body.classList.add('dark');
   $('#themeToggle').addEventListener('click', () => {
@@ -425,6 +445,8 @@ function init() {
     runGenerate('default');
   });
   $$('[data-variant]').forEach(button => button.addEventListener('click', () => runGenerate(button.dataset.variant)));
+  $('#demoHeroButton')?.addEventListener('click', runDemoPackage);
+  $('#demoEmptyButton')?.addEventListener('click', runDemoPackage);
 }
 
 document.addEventListener('DOMContentLoaded', init);

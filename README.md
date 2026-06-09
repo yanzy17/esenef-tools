@@ -38,7 +38,13 @@ Digital Seller Assistant cocok untuk:
 - Pelajar yang mau mulai jualan pelan-pelan.
 - Orang yang sudah punya produk tapi bingung cara promosi.
 
-## Cara Pakai
+## Cara Paling Cepat Lihat Hasil
+
+1. Buka `index.html` di browser.
+2. Klik **Lihat Hasil Demo** di hero atau **Tampilkan Hasil Demo** di empty state.
+3. Tools otomatis mengisi contoh `Paket Produk Digital Siap Jual` dan langsung menampilkan paket promosi siap copy.
+
+## Cara Pakai Manual
 
 1. Buka `index.html` di browser.
 2. Isi field wajib **Nama produk**.
@@ -201,6 +207,11 @@ Output menyediakan tombol:
 - **Copy DM**
 - **Copy Rencana Posting**
 - **Copy Semua**
+
+Ada tombol demo cepat:
+
+- **Lihat Hasil Demo** di hero.
+- **Tampilkan Hasil Demo** di empty state.
 
 Ada juga tombol regenerate:
 
