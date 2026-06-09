@@ -1,12 +1,11 @@
-const CACHE_NAME = 'digital-seller-super-tools-v1';
+const CACHE_NAME = 'esenef-tools-digital-seller-v1';
 const ASSETS = [
   './',
   './index.html',
-  './tools-affiliate.html',
-  './buku-keuangan.html',
   './style.css',
   './script.js',
   './manifest.json',
+  './service-worker.js',
   './icon.svg'
 ];
 
@@ -16,7 +15,9 @@ self.addEventListener('install', event => {
 });
 
 self.addEventListener('activate', event => {
-  event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key)))));
+  event.waitUntil(
+    caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))))
+  );
   self.clients.claim();
 });
 

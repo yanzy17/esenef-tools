@@ -2,71 +2,188 @@
 <html lang="id">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#10b981">
-  <title>Digital Seller Super Tools</title>
+  <meta name="description" content="Digital Seller Assistant / Esenef Tools membantu pemula membuat paket promosi produk siap posting dari satu nama produk.">
+  <title>Digital Seller Assistant / Esenef Tools</title>
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon.svg">
   <link rel="stylesheet" href="style.css">
 </head>
-<body data-page="home">
+<body>
   <div class="app-shell">
-    <aside class="sidebar">
-      <a class="brand" href="index.html" aria-label="Digital Seller Super Tools"><img src="icon.svg" alt="" class="brand-icon"><span>Digital Seller<br><strong>Super Tools</strong></span></a>
-      <nav class="side-nav" aria-label="Navigasi utama">
-        <a class="active" href="index.html">🏠 Home</a>
-        <a href="tools-affiliate.html">⚡ Tools Affiliate</a>
-        <a href="buku-keuangan.html">💸 Buku Keuangan</a>
+    <header class="site-header" id="top">
+      <nav class="topbar" aria-label="Navigasi utama">
+        <a class="brand" href="#top" aria-label="Esenef Tools">
+          <img src="icon.svg" alt="" class="brand-icon">
+          <span><strong>Esenef Tools</strong><small>Digital Seller Assistant</small></span>
+        </a>
+        <div class="topbar-actions">
+          <a class="nav-chip" href="#generator">Generator</a>
+          <button class="theme-button" id="themeToggle" type="button" aria-label="Ganti mode gelap">🌙</button>
+        </div>
       </nav>
-      <button class="theme-toggle" data-theme-toggle type="button">🌙 Dark Mode</button>
-    </aside>
 
-    <main class="page page-home">
-      <header class="topbar">
-        <a class="brand mobile-brand" href="index.html"><img src="icon.svg" alt="" class="brand-icon"><span>Digital Seller <strong>Super Tools</strong></span></a>
-        <button class="theme-toggle compact" data-theme-toggle type="button">🌙</button>
-      </header>
-
-      <section class="hero glass-card">
+      <section class="hero" aria-labelledby="heroTitle">
         <div class="hero-copy">
-          <span class="eyebrow">PWA premium buat seller digital</span>
-          <h1>Satu tempat buat bantu promosi, catat penjualan, dan pantau cuan digitalmu.</h1>
-          <p>Tools ringan untuk affiliate, produk digital, jualan aplikasi premium, langganan AI, dan pemasukan online lainnya.</p>
+          <span class="badge">Cocok buat pemula jualan dari HP</span>
+          <h1 id="heroTitle">Digital Seller Assistant</h1>
+          <p class="hero-subtitle">Masukin produk, langsung dapet analisis, target audiens, angle, hook, caption, CTA, script video, balasan DM, dan rencana posting 5 hari.</p>
+          <p class="hero-note">Dibuat buat pemula produk digital, affiliate Shopee/TikTok, reseller, kreator konten, ibu rumah tangga, pelajar, dan siapa pun yang sering blank saat mau promosi.</p>
           <div class="hero-actions">
-            <a class="btn primary" href="tools-affiliate.html">Masuk Tools Affiliate</a>
-            <a class="btn secondary" href="buku-keuangan.html">Buka Buku Keuangan</a>
+            <a class="btn primary" href="#generator">Buat Paket Promosi</a>
+            <a class="btn secondary" href="#preview">Lihat contoh value</a>
           </div>
         </div>
-        <div class="hero-panel">
-          <div class="mini-window"><span></span><span></span><span></span></div>
-          <div class="metric-row"><span>Profit bulan ini</span><strong id="homeHeroProfit">Rp0</strong></div>
-          <div class="spark-bars"><i style="height:38%"></i><i style="height:68%"></i><i style="height:50%"></i><i style="height:84%"></i><i style="height:64%"></i></div>
-          <p class="muted">Offline-ready, localStorage, tanpa backend.</p>
+
+        <aside class="hero-preview" aria-label="Ringkasan output">
+          <p class="eyebrow">Output sekali generate</p>
+          <div class="preview-list">
+            <span>Analisis produk singkat</span>
+            <span>3 target audiens</span>
+            <span>5 angle promosi</span>
+            <span>10 hook natural</span>
+            <span>Caption, CTA, video, DM, plan</span>
+          </div>
+        </aside>
+      </section>
+    </header>
+
+    <main>
+      <section class="pain-section" aria-labelledby="painTitle">
+        <div class="section-heading centered">
+          <p class="eyebrow">Masalah pemula</p>
+          <h2 id="painTitle">Yang bikin jualan mandek biasanya bukan cuma caption.</h2>
+        </div>
+        <div class="pain-grid">
+          <article class="small-card"><span>01</span><h3>Bingung produk ini cocok dijual ke siapa</h3></article>
+          <article class="small-card"><span>02</span><h3>Blank tiap mau bikin hook atau caption</h3></article>
+          <article class="small-card"><span>03</span><h3>Takut promosi kelihatan maksa</h3></article>
+          <article class="small-card"><span>04</span><h3>Ga tahu harus posting apa besok</h3></article>
         </div>
       </section>
 
-      <section class="section-grid features-grid">
-        <article class="feature-card"><div class="feature-icon">⚡</div><h2>Tools Affiliate</h2><p>Buat hook, caption, CTA, script video, dan ide konten promosi.</p></article>
-        <article class="feature-card"><div class="feature-icon">💸</div><h2>Buku Keuangan Digital</h2><p>Catat pemasukan manual dan lihat rekap omzet, modal, profit per bulan.</p></article>
-        <article class="feature-card"><div class="feature-icon">📲</div><h2>PWA Offline</h2><p>Bisa dipasang ke layar utama HP dan tetap bisa dipakai offline setelah dibuka pertama kali.</p></article>
-      </section>
-
-      <section class="dashboard-card">
-        <div class="section-title"><div><span class="eyebrow">Snapshot</span><h2>Ringkasan penjualan bulan ini</h2></div><a class="btn ghost" href="buku-keuangan.html">Kelola transaksi</a></div>
-        <div id="homeSalesOverview" class="overview-grid"></div>
-      </section>
-
-      <section class="dashboard-card">
-        <div class="section-title"><div><span class="eyebrow">Cocok untuk</span><h2>Seller yang butuh tools simpel tapi powerfull</h2></div></div>
-        <div class="chips-list">
-          <span>Digital seller</span><span>Affiliate Shopee/TikTok</span><span>Penjual APK premium</span><span>Penjual akses AI premium</span><span>Pemula yang jualan dari HP</span><span>Kreator yang mau tracking pemasukan</span>
+      <section class="generator-section" id="generator" aria-labelledby="generatorTitle">
+        <div class="section-heading">
+          <p class="eyebrow">Satu alur utama</p>
+          <h2 id="generatorTitle">Buat Paket Promosi Lengkap</h2>
+          <p>Isi nama produk saja sudah cukup. Pilihan lain opsional kalau kamu mau hasilnya lebih nyambung sama platform dan gaya jualanmu.</p>
         </div>
+
+        <div class="generator-layout">
+          <form class="generator-card" id="promoForm">
+            <label class="field featured-field">
+              <span>Nama produk <small>wajib</small></span>
+              <input id="productName" name="productName" required autocomplete="off" placeholder="contoh: Paket Produk Digital Siap Jual / Sunscreen SPF 50 / Rice Cooker Mini">
+            </label>
+
+            <div class="field-grid">
+              <label class="field">
+                <span>Jenis produk</span>
+                <select id="productType" name="productType">
+                  <option value="auto">Tebak otomatis dari nama produk</option>
+                  <option>Produk Digital</option>
+                  <option>Affiliate Shopee</option>
+                  <option>TikTok Shop</option>
+                  <option>Fashion</option>
+                  <option>Skincare</option>
+                  <option>Alat Rumah</option>
+                  <option>Makanan</option>
+                  <option>Lainnya</option>
+                </select>
+              </label>
+
+              <label class="field">
+                <span>Platform promosi</span>
+                <select id="platform" name="platform">
+                  <option>Threads</option>
+                  <option>TikTok</option>
+                  <option>Instagram</option>
+                  <option>WhatsApp</option>
+                  <option>Shopee Video</option>
+                </select>
+              </label>
+
+              <label class="field">
+                <span>Gaya konten</span>
+                <select id="contentStyle" name="contentStyle">
+                  <option>Soft Selling</option>
+                  <option>Relate & Curhat</option>
+                  <option>Edukasi</option>
+                  <option>Review Jujur</option>
+                  <option>Viral Halus</option>
+                </select>
+              </label>
+
+              <label class="field">
+                <span>Level kamu</span>
+                <select id="userLevel" name="userLevel">
+                  <option>Aku masih blank banget</option>
+                  <option>Aku udah punya produk tapi bingung promosi</option>
+                  <option>Aku butuh konten siap posting</option>
+                </select>
+              </label>
+            </div>
+
+            <button class="btn primary full" id="generateButton" type="submit">Generate Paket Promosi</button>
+            <p class="form-hint">Pure frontend. Tidak ada backend, tidak ada database server, dan hasil dibuat langsung di browser.</p>
+          </form>
+
+          <aside class="example-card" id="preview">
+            <p class="eyebrow">Contoh hasil singkat</p>
+            <h3>Kalau input: “Paket Produk Digital Siap Jual”</h3>
+            <p>Tools akan mengarahkan angle ke “mulai jualan dari HP”, bukan klaim cepat kaya. Jadi output terasa lebih aman, natural, dan cocok buat pemula.</p>
+            <div class="example-hook">
+              <strong>Contoh hook</strong>
+              <span>kadang yang bikin ga mulai jualan itu bukan modal, tapi ga tahu harus jual apa.</span>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="result-section" aria-labelledby="resultTitle" aria-live="polite">
+        <div class="result-toolbar">
+          <div>
+            <p class="eyebrow">Paket strategi</p>
+            <h2 id="resultTitle">Hasil akan muncul di sini</h2>
+          </div>
+          <div class="result-actions" id="resultActions" hidden>
+            <button class="btn ghost" type="button" data-variant="default">Generate Ulang</button>
+            <button class="btn ghost" type="button" data-variant="santai">Bikin Lebih Santai</button>
+            <button class="btn ghost" type="button" data-variant="soft">Bikin Lebih Soft Selling</button>
+            <button class="btn ghost" type="button" data-variant="relate">Bikin Lebih Relate</button>
+            <button class="btn secondary" type="button" id="copyAllButton">Copy Semua</button>
+          </div>
+        </div>
+
+        <div class="loading-state" id="loadingState" hidden>
+          <div class="loader" aria-hidden="true"></div>
+          <p>lagi bantu mikirin angle jualan yang paling masuk akal...</p>
+        </div>
+
+        <div class="empty-state" id="emptyState">
+          <span>✦</span>
+          <h3>Sekali generate, bukan cuma caption.</h3>
+          <p>Kamu akan dapat analisis produk, target audiens, angle konten, hook, caption, CTA, script video, balasan DM, dan rencana posting 5 hari dalam card yang gampang dicopy.</p>
+        </div>
+
+        <div class="result-grid" id="resultGrid"></div>
       </section>
     </main>
+
+    <footer class="footer">
+      <p>Dibuat untuk pemula yang pengen jualan lebih rapi, bukan makin pusing.</p>
+      <strong>by esenef17</strong>
+    </footer>
   </div>
 
-  <nav class="bottom-nav" aria-label="Navigasi mobile"><a class="active" href="index.html">🏠<span>Home</span></a><a href="tools-affiliate.html">⚡<span>Tools</span></a><a href="buku-keuangan.html">💸<span>Buku</span></a></nav>
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script src="script.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('service-worker.js'));
+    }
+  </script>
 </body>
 </html>

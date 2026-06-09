@@ -1,14 +1,19 @@
 {
-  "name": "Digital Seller Super Tools",
-  "short_name": "Seller Tools",
-  "description": "PWA premium untuk digital seller, affiliator, dan penjual produk digital dari HP.",
-  "start_url": "index.html",
+  "name": "Esenef Tools - Digital Seller Assistant",
+  "short_name": "Esenef Tools",
+  "description": "Digital Seller Assistant untuk membuat paket promosi produk siap posting dari satu nama produk.",
+  "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "background_color": "#f4fbf8",
+  "background_color": "#071411",
   "theme_color": "#10b981",
   "icons": [
-    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
   ]
 }

@@ -1,12 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Digital Seller Super Tools icon">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Esenef Tools icon">
   <defs>
-    <linearGradient id="g" x1="64" y1="42" x2="448" y2="470" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#34d399"/><stop offset=".52" stop-color="#10b981"/><stop offset="1" stop-color="#0f766e"/>
+    <linearGradient id="g" x1="74" y1="46" x2="438" y2="462" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#a7f3d0"/>
+      <stop offset="0.45" stop-color="#10b981"/>
+      <stop offset="1" stop-color="#047857"/>
     </linearGradient>
-    <filter id="s" x="0" y="0" width="512" height="512"><feDropShadow dx="0" dy="22" stdDeviation="24" flood-color="#064e3b" flood-opacity=".28"/></filter>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="22" stdDeviation="20" flood-color="#064e3b" flood-opacity=".26"/>
+    </filter>
   </defs>
-  <rect x="48" y="48" width="416" height="416" rx="118" fill="url(#g)" filter="url(#s)"/>
-  <path d="M150 308c34 58 126 72 188 26 33-24 51-57 55-93" fill="none" stroke="#ecfdf5" stroke-width="34" stroke-linecap="round"/>
-  <path d="M156 205h200M156 256h145" stroke="#ecfdf5" stroke-width="34" stroke-linecap="round"/>
-  <circle cx="363" cy="181" r="34" fill="#fbbf24"/>
+  <rect width="512" height="512" rx="116" fill="#071411"/>
+  <rect x="94" y="94" width="324" height="324" rx="88" fill="url(#g)" filter="url(#shadow)"/>
+  <path d="M171 180h174v44H221v42h104v41H221v63h-50V180Z" fill="#ecfdf5"/>
+  <path d="M338 162h34v34h34v34h-34v34h-34v-34h-34v-34h34v-34Z" fill="#ecfdf5" opacity=".96"/>
+  <text x="256" y="399" text-anchor="middle" font-family="Arial, sans-serif" font-size="34" font-weight="800" fill="#ecfdf5">17</text>
 </svg>

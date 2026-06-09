@@ -1,124 +1,430 @@
-(() => {
-  'use strict';
-  const STORE = { tx:'dsst_transactions', products:'dsst_products', targets:'dsst_targets', history:'dsst_affiliate_history', dark:'dsst_dark_mode' };
-  const categories = ['Produk Digital','APK Premium','Affiliate','Jasa','Langganan Pro / Premium AI','Akses AI','Tools Digital','Lainnya'];
-  const sources = ['Lynk ID','WhatsApp','Threads','Instagram','TikTok','Shopee','Telegram','Langganan Pro / Premium AI','QRIS Manual','Transfer Manual','Marketplace','Lainnya'];
-  const payments = ['QRIS DANA','QRIS GoPay','Transfer Bank','E-wallet','Cash','Lynk ID Web','Lainnya'];
-  const rupiah = n => new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(Number(n)||0);
-  const num = v => Math.max(0, Number(v)||0);
-  const uid = () => `${Date.now()}-${Math.random().toString(16).slice(2)}`;
-  const today = () => new Date().toISOString().slice(0,10);
-  const load = (k, fallback=[]) => { try { return JSON.parse(localStorage.getItem(k)) ?? fallback; } catch { return fallback; } };
-  const save = (k, v) => localStorage.setItem(k, JSON.stringify(v));
-  const toast = (msg) => { const el = document.getElementById('toast'); if(!el) return; el.textContent=msg; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),2600); };
-  const monthKey = d => (d || today()).slice(0,7);
-  const monthLabel = key => new Date(`${key}-01T00:00:00`).toLocaleDateString('id-ID',{month:'long',year:'numeric'});
-  const shortMonth = key => new Date(`${key}-01T00:00:00`).toLocaleDateString('id-ID',{month:'short'}).toUpperCase();
-  const calcTx = tx => { const total = num(tx.qty) * num(tx.price); const profit = total - num(tx.cost) - num(tx.discount) - num(tx.fee); return { total, profit }; };
-  const activeTx = tx => tx.status !== 'Refund';
-  const groupSum = (items, keyFn, valFn) => items.reduce((a,x)=>{ const k=keyFn(x)||'Lainnya'; a[k]=(a[k]||0)+valFn(x); return a; },{});
-  const topOf = obj => Object.entries(obj).sort((a,b)=>b[1]-a[1])[0];
-  const escapeHtml = s => String(s ?? '').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-  const fillSelect = (id, arr, keepFirst=false) => { const el=document.getElementById(id); if(!el) return; const first=keepFirst?el.querySelector('option')?.outerHTML||'':''; el.innerHTML=first+arr.map(x=>`<option>${escapeHtml(x)}</option>`).join(''); };
-  const download = (name, content, type='text/plain') => { const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([content],{type})); a.download=name; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),500); };
-  const copyText = async text => { await navigator.clipboard.writeText(text); toast('Berhasil disalin.'); };
+const THEME_KEY = 'esenef_tools_theme_clean_v1';
+const LAST_PACKAGE_KEY = 'esenef_tools_last_package_clean_v1';
 
-  function initGlobal(){
-    if(localStorage.getItem(STORE.dark)==='true') document.body.classList.add('dark');
-    document.querySelectorAll('[data-theme-toggle]').forEach(btn=>btn.addEventListener('click',()=>{ document.body.classList.toggle('dark'); save(STORE.dark, document.body.classList.contains('dark')); }));
-    if('serviceWorker' in navigator) navigator.serviceWorker.register('service-worker.js').catch(()=>{});
+const $ = (selector, root = document) => root.querySelector(selector);
+const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+const clean = value => String(value || '').trim();
+
+const categoryRules = {
+  'Produk Digital': {
+    target: ['pemula yang pengen mulai jualan dari HP', 'reseller digital yang belum punya produk sendiri', 'kreator konten kecil yang butuh bahan jualan', 'ibu rumah tangga yang cari jualan fleksibel', 'pelajar yang mau mulai pelan-pelan'],
+    pain: ['bingung mulai jualan', 'belum punya produk sendiri', 'takut harus bikin produk dari nol', 'bingung promosi tanpa kelihatan maksa', 'kebanyakan mikir sampai akhirnya ga posting'],
+    angle: ['mulai dari HP', 'produk siap jual', 'hemat waktu', 'cocok pemula', 'tinggal promosi lebih rapi'],
+    benefit: 'mereka bisa punya bahan jualan lebih cepat dan belajar promosi tanpa harus bikin semuanya dari nol',
+    avoid: 'jangan pakai janji cepat kaya. Lebih aman tekankan mulai lebih rapi, punya bahan jualan, dan belajar konsisten.'
+  },
+  'Affiliate Shopee': {
+    target: ['pemula affiliate Shopee', 'orang yang suka review barang harian', 'kreator konten jualan dari HP', 'ibu rumah tangga yang promosi barang kepake', 'pelajar yang cari ide konten simpel'],
+    pain: ['bingung pilih produk yang relate', 'takut konten terlihat terlalu jualan', 'ga tahu angle review yang enak', 'bingung bikin CTA ke link', 'posting tapi minim klik'],
+    angle: ['review pemakaian', 'barang murah tapi kepake', 'problem-solution harian', 'before-after sederhana', 'cek link tanpa maksa'],
+    benefit: 'produknya bisa dikaitkan dengan masalah harian, jadi audiens lebih gampang paham kenapa barang itu berguna',
+    avoid: 'jangan cuma tempel link dan bilang murah. Tunjukkan masalah kecil yang diselesaikan produknya.'
+  },
+  'TikTok Shop': {
+    target: ['pemula affiliate TikTok', 'kreator video pendek', 'seller kecil yang butuh konten simpel', 'orang yang jualan dari HP', 'penonton yang suka review cepat'],
+    pain: ['bingung bikin opening video', 'takut review terdengar lebay', 'ga tahu visual apa yang harus direkam', 'konten cepat dilewati', 'CTA terasa maksa'],
+    angle: ['demo cepat', 'review jujur', 'visual sebelum-sesudah', 'masalah harian', 'keranjang tanpa hard selling'],
+    benefit: 'orang bisa melihat manfaatnya cepat lewat visual singkat, bukan cuma membaca klaim',
+    avoid: 'jangan terlalu banyak klaim. Tunjukkan demo, tekstur, isi, ukuran, atau cara pakai.'
+  },
+  Fashion: {
+    target: ['mahasiswa yang pengen outfit simpel', 'pekerja yang butuh gaya rapi harian', 'hijabers yang suka mix and match', 'cewek/cowok muda yang cari barang kepake', 'orang yang pengen kelihatan niat tanpa ribet'],
+    pain: ['bingung outfit', 'pengen rapi tapi simpel', 'cari barang murah tapi kelihatan bagus', 'takut salah ukuran atau bahan', 'lemari penuh tapi tetap merasa ga punya baju'],
+    angle: ['mix and match', 'outfit harian', 'murah tapi kepake', 'rapi tanpa ribet', 'satu item banyak gaya'],
+    benefit: 'audiens bisa langsung membayangkan produk ini dipakai untuk aktivitas harian mereka',
+    avoid: 'jangan cuma bilang bahannya bagus. Tunjukkan dipakai untuk momen apa dan cocok dipadukan dengan apa.'
+  },
+  Skincare: {
+    target: ['remaja yang mulai peduli kulit', 'mahasiswa dengan budget terbatas', 'pekerja yang butuh skincare simpel', 'orang dengan kulit kusam atau berminyak', 'pemula yang takut salah produk'],
+    pain: ['kulit kusam', 'minyak berlebih', 'jerawat datang-pergi', 'takut salah produk', 'bingung urutan pakai'],
+    angle: ['review jujur', 'before-after realistis', 'solusi harian', 'harga worth it', 'pemakaian rutin yang gampang'],
+    benefit: 'audiens butuh rasa aman dan penjelasan realistis sebelum mencoba produk baru',
+    avoid: 'jangan klaim hasil instan atau berlebihan. Pakai bahasa realistis dan ingatkan untuk cek kecocokan kulit.'
+  },
+  'Alat Rumah': {
+    target: ['ibu rumah tangga yang kerjaan rumahnya banyak', 'anak kos dengan ruang kecil', 'pekerja rantau yang butuh alat praktis', 'keluarga kecil yang mau rumah lebih rapi', 'orang yang suka solusi hemat tenaga'],
+    pain: ['kerjaan rumah ribet', 'pengen hemat waktu', 'ruang kecil cepat berantakan', 'capek ngerjain hal berulang', 'butuh alat yang gampang dipakai'],
+    angle: ['praktis', 'hemat tenaga', 'cocok rumah kecil', 'bikin hidup lebih gampang', 'demo sebelum-sesudah'],
+    benefit: 'manfaatnya bisa langsung kebayang di rutinitas rumah, apalagi kalau ditunjukkan lewat demo',
+    avoid: 'jangan cuma sebut fitur. Tunjukkan situasi rumah yang jadi lebih gampang setelah pakai produk.'
+  },
+  Makanan: {
+    target: ['anak kos yang butuh stok praktis', 'pekerja yang sering lapar di sela aktivitas', 'pelajar yang cari camilan hemat', 'keluarga yang butuh pilihan simpel', 'orang yang suka makanan enak tanpa ribet'],
+    pain: ['lapar tapi malas keluar', 'pengen praktis', 'budget terbatas', 'butuh stok camilan', 'mau enak tapi ga ribet'],
+    angle: ['solusi cepat', 'stok camilan', 'cocok buat aktivitas harian', 'hemat tapi tetap enak', 'teman kerja atau belajar'],
+    benefit: 'orang mudah tertarik kalau mereka bisa membayangkan momen makan, rasa, dan situasi pakainya',
+    avoid: 'jangan cuma bilang enak. Ceritakan kapan cocok dimakan dan kenapa praktis.'
+  },
+  Lainnya: {
+    target: ['pemula yang lagi cari produk untuk dipromosikan', 'orang yang jualan dari HP', 'kreator konten kecil', 'reseller yang butuh angle baru', 'calon pembeli yang butuh solusi praktis'],
+    pain: ['bingung apakah produk ini cocok dijual', 'ga tahu harus ngomong ke siapa', 'takut promosi terlalu maksa', 'blank saat bikin konten', 'butuh alasan yang masuk akal buat membeli'],
+    angle: ['masalah harian', 'solusi praktis', 'review jujur', 'pemula friendly', 'soft selling'],
+    benefit: 'produk terasa lebih menarik kalau dikaitkan dengan masalah yang audiens rasakan sehari-hari',
+    avoid: 'jangan mulai dari fitur. Mulai dari masalah audiens, baru sambungkan ke manfaat produk.'
   }
+};
 
-  function summarize(transactions, key=monthKey(today())){
-    const monthItems = transactions.filter(t=>monthKey(t.date)===key);
-    const counted = monthItems.filter(activeTx);
-    const omzet = counted.reduce((s,t)=>s+calcTx(t).total,0);
-    const modal = counted.reduce((s,t)=>s+num(t.cost),0);
-    const profit = counted.reduce((s,t)=>s+calcTx(t).profit,0);
-    const sold = counted.reduce((s,t)=>s+num(t.qty),0);
-    const topProduct = topOf(groupSum(counted,t=>t.name,t=>num(t.qty)))?.[0] || '-';
-    const topSource = topOf(groupSum(counted,t=>t.source,t=>calcTx(t).total))?.[0] || '-';
-    const topPayment = topOf(groupSum(counted,t=>t.payment,t=>1))?.[0] || '-';
-    return { monthItems, counted, omzet, modal, profit, sold, totalTx:counted.length, topProduct, topSource, topPayment, unpaid:monthItems.filter(t=>t.status==='Belum Lunas').length, refunds:monthItems.filter(t=>t.status==='Refund').length };
-  }
+const styleRules = {
+  'Soft Selling': { intro: 'pelan-pelan aja, ga perlu ngegas jualan', cta: 'kalau mau cek detailnya, aku taruh linknya ya' },
+  'Relate & Curhat': { intro: 'jujur, bagian paling susah seringnya bukan niat', cta: 'kalau kamu relate, simpan dulu atau DM aja' },
+  Edukasi: { intro: 'kadang kita perlu paham masalahnya dulu sebelum promosi', cta: 'simpan dulu biar gampang dicari pas butuh' },
+  'Review Jujur': { intro: 'bahas yang realistis aja, ga perlu terlalu manis', cta: 'cek detailnya dulu, jangan buru-buru kalau belum cocok' },
+  'Viral Halus': { intro: 'ini angle yang bisa bikin orang berhenti scroll sebentar', cta: 'komen “MAU” kalau pengen aku spill detailnya' }
+};
 
-  function initHome(){
-    const tx = load(STORE.tx); const s = summarize(tx); const wrap=document.getElementById('homeSalesOverview');
-    const hero=document.getElementById('homeHeroProfit'); if(hero) hero.textContent=rupiah(s.profit);
-    if(!wrap) return;
-    if(!tx.length){ wrap.innerHTML='<div class="stat-card" style="grid-column:1/-1"><strong>Belum ada data penjualan.</strong><span>Mulai catat transaksi pertamamu.</span></div>'; return; }
-    wrap.innerHTML = [ ['Omzet bulan ini',rupiah(s.omzet)], ['Profit bulan ini',rupiah(s.profit)], ['Total transaksi bulan ini',s.totalTx], ['Produk terlaris bulan ini',s.topProduct] ].map(([a,b])=>`<div class="stat-card"><span>${a}</span><strong>${b}</strong></div>`).join('');
-  }
+const platformRules = {
+  Threads: { channel: 'teks pendek yang berasa ngobrol', visual: 'tulis hook kuat di baris pertama, lanjutkan dengan 2–3 paragraf pendek', cta: 'balas “MAU” kalau mau detailnya' },
+  TikTok: { channel: 'video cepat dengan hook di 2 detik pertama', visual: 'rekam tangan, layar HP, produk, atau before-after sederhana', cta: 'cek keranjang/link kalau mau lihat detailnya' },
+  Instagram: { channel: 'Reels atau carousel singkat', visual: 'pakai cover teks besar, slide sederhana, dan contoh situasi harian', cta: 'simpan postingan ini atau DM kalau mau tanya' },
+  WhatsApp: { channel: 'status singkat yang terasa personal', visual: 'pakai foto produk dan teks pendek yang gampang dibaca', cta: 'chat aku kalau mau lihat detailnya' },
+  'Shopee Video': { channel: 'demo produk singkat dan jelas', visual: 'tunjukkan produk dari dekat, cara pakai, dan manfaat utama', cta: 'cek produk di keranjang ya' }
+};
 
-  const toolDefs = [
-    ['dashboard','Dashboard Affiliate'],['angle','Riset Angle Produk'],['hook','Hook Generator'],['caption','Caption Generator'],['cta','CTA Generator'],['script','Script Video Pendek'],['ideas','Ide Konten'],['prompt','Prompt AI'],['reply','Reply Komentar/DM'],['commission','Kalkulator Komisi'],['history','Riwayat Generate']
+function inferProductType(productName, selectedType) {
+  if (selectedType && selectedType !== 'auto' && selectedType !== 'Lainnya') return selectedType;
+  const name = productName.toLowerCase();
+  if (/ebook|template|digital|kelas|course|produk siap jual|file|notion|canva|preset|reseller/.test(name)) return 'Produk Digital';
+  if (/sunscreen|serum|toner|moist|skincare|sabun|acne|jerawat|spf|cream/.test(name)) return 'Skincare';
+  if (/baju|celana|dress|hijab|tas|sepatu|kaos|outfit|jaket|kemeja/.test(name)) return 'Fashion';
+  if (/rice cooker|rak|pel|dapur|rumah|lampu|vacuum|alat|kompor|panci/.test(name)) return 'Alat Rumah';
+  if (/snack|makanan|kopi|camilan|mie|sambal|kue|minuman|cookies/.test(name)) return 'Makanan';
+  return selectedType === 'Lainnya' ? 'Lainnya' : 'Produk Digital';
+}
+
+function getContext(values, variant = 'default') {
+  const product = clean(values.productName) || 'produk ini';
+  const inferredType = inferProductType(product, values.productType);
+  const productData = categoryRules[inferredType] || categoryRules.Lainnya;
+  const platform = values.platform || 'Threads';
+  let contentStyle = values.contentStyle || 'Soft Selling';
+  if (variant === 'santai') contentStyle = 'Review Jujur';
+  if (variant === 'soft') contentStyle = 'Soft Selling';
+  if (variant === 'relate') contentStyle = 'Relate & Curhat';
+  return {
+    product,
+    inferredType,
+    productData,
+    platform,
+    platformData: platformRules[platform],
+    contentStyle,
+    styleData: styleRules[contentStyle],
+    userLevel: values.userLevel || 'Aku masih blank banget',
+    variant
+  };
+}
+
+function pick(list, index) {
+  return list[index % list.length];
+}
+
+function titleCase(text) {
+  const value = clean(text);
+  return value ? value.charAt(0).toUpperCase() + value.slice(1) : value;
+}
+
+function generatePackage(values, variant = 'default') {
+  const ctx = getContext(values, variant);
+  return [
+    buildAnalysis(ctx),
+    buildAudience(ctx),
+    buildAngles(ctx),
+    buildHooks(ctx),
+    buildCaptions(ctx),
+    buildCtas(ctx),
+    buildScripts(ctx),
+    buildDmReplies(ctx),
+    buildPostingPlan(ctx)
   ];
-  const val = id => document.getElementById(id)?.value.trim() || '';
-  const context = () => ({ product:val('productName')||'produk kamu', niche:val('productNiche')||'produk digital', audience:val('audience')||'calon pembeli', problem:val('audienceProblem')||'butuh solusi yang lebih praktis', benefit:val('mainBenefit')||'bikin aktivitas jadi lebih mudah', platform:val('platform')||'konten', tone:val('tone')||'casual', goal:val('contentGoal')||'menarik pembeli', question:val('buyerQuestion') });
-  const lineList = (n, fn) => Array.from({length:n},(_,i)=>`${i+1}. ${fn(i+1)}`).join('\n');
-  function generate(type){ const c=context(); const soft=`${c.product} bisa bantu ${c.audience} yang ${c.problem}, dengan benefit utama: ${c.benefit}.`;
-    const map={
-      angle:`## 10 Angle Promosi\n${lineList(10,i=>`${['Hemat waktu','Hemat budget','Solusi pemula','Upgrade hasil','Anti ribet'][i%5]}: tunjukkan bagaimana ${soft}`)}\n\n## Pain Point\n- Bingung mulai dari mana\n- Takut salah beli\n- Mau hasil cepat tapi tetap aman\n\n## Benefit\n- Lebih praktis dipakai harian\n- Cocok untuk ${c.audience}\n- Value terasa tanpa hard selling\n\n## Ide Konten + Hook\n${lineList(10,i=>`Format ${i%2?'story':'tips'}: “Kalau kamu ${c.problem}, coba cek ini dulu...”`)}`,
-      hook:`## 20 Hook Pendek\n${lineList(20,i=>`Kamu yang ${c.problem}, ${c.product} ini bisa jadi jalan ninja.`)}\n\n## 10 Hook Kontroversial Halus\n${lineList(10,i=>`Bukan semua orang butuh ${c.product}, tapi kalau kamu ${c.audience}, ini worth dicoba.`)}\n\n## 10 Hook Storytelling\n${lineList(10,i=>`Awalnya aku kira ${c.problem} itu normal, sampai nemu cara lebih simpel pakai ${c.product}.`)}\n\n## 10 Hook Edukasi\n${lineList(10,i=>`3 alasan ${c.product} relevan buat ${c.audience} di ${c.platform}.`)}`,
-      caption:`## Caption Pendek\n${soft}\n\n## Caption Storytelling\nDulu banyak ${c.audience} ngerasa ${c.problem}. Pelan-pelan, solusi seperti ${c.product} bisa bantu kerja/promosi jadi lebih ringan. Kalau penasaran, mulai dari kebutuhanmu dulu.\n\n## Caption Edukasi\nSebelum pilih ${c.product}, cek 3 hal: kebutuhan, budget, dan cara pakainya. Kalau cocok, benefitnya bisa terasa banget: ${c.benefit}.\n\n## Caption Soft Selling\nKalau kamu lagi cari opsi yang praktis, ${c.product} boleh masuk list. Tanya dulu aja biar nggak salah pilih.\n\n## Caption Threads\n${soft} Aku suka karena bahasanya simpel: cek kebutuhan → tanya detail → baru ambil.\n\n## Caption TikTok/IG\nHook: ${c.problem}?\nIsi: kenalin ${c.product}.\nCTA: komen “INFO” kalau mau detail.`,
-      cta:`## CTA Komen\n${lineList(8,i=>`Komen “INFO” kalau mau aku jelasin versi paling simpelnya.`)}\n\n## CTA DM\n${lineList(8,i=>`DM “${c.product.toUpperCase().slice(0,12)}” biar aku bantu cek cocok atau nggak.`)}\n\n## CTA Cek Bio\n${lineList(6,i=>`Detailnya aku taruh di bio, cek kalau kamu mau bandingin dulu.`)}\n\n## CTA Soft Selling\n${lineList(6,i=>`Kalau masih ragu, tanya aja. Nggak harus checkout sekarang.`)}\n\n## CTA Urgent Tapi Tidak Maksa\n${lineList(6,i=>`Slot/harga bisa berubah, jadi amankan kalau memang sudah cocok.`)}`,
-      script:`## Script 15 Detik\nHook: ${c.problem}?\nMasalah: Banyak ${c.audience} stuck karena caranya ribet.\nSolusi: Coba ${c.product}.\nManfaat: ${c.benefit}.\nCTA: Komen INFO.\n\n## Script 30 Detik\nHook → “Kalau kamu ${c.problem}, tonton ini.”\nMasalah → “Biasanya waktu kebuang buat cari cara yang cocok.”\nSolusi → “${c.product} bantu bikin prosesnya lebih praktis.”\nBukti/manfaat → “Benefit utamanya ${c.benefit}.”\nCTA → “DM aku kalau mau detail.”\n\n## Script 60 Detik\nHook: Ceritakan masalah ${c.audience}.\nMasalah: Jelaskan efek ${c.problem}.\nSolusi: Kenalkan ${c.product} tanpa maksa.\nBukti/manfaat: Sebutkan benefit, contoh pemakaian, dan siapa yang cocok.\nCTA: Ajak tanya kebutuhan dulu.`,
-      ideas:`## 30 Ide Konten Harian\n${lineList(30,i=>`${['Tips','Story','Checklist','Mitos/Fakta','Tutorial'][i%5]} — Hook: “${c.audience} wajib tahu ini soal ${c.product}” — CTA: tanya kebutuhan di DM.`)}`,
-      prompt:`## Prompt Riset Produk\nBantu riset ${c.product} untuk ${c.audience}. Cari pain point, benefit, angle promosi, dan risiko miskomunikasi.\n\n## Prompt Bikin Caption\nBuat caption ${c.platform} tone ${c.tone} tentang ${c.product}, fokus masalah ${c.problem} dan benefit ${c.benefit}.\n\n## Prompt Bikin Hook\nBuat 50 hook natural untuk ${c.product}, tidak lebay, cocok untuk pemula.\n\n## Prompt Script Video\nBuat script video 15/30/60 detik format hook-masalah-solusi-manfaat-CTA.\n\n## Prompt Balas DM\nBalas pertanyaan pembeli secara santai, trust building, dan closing halus.\n\n## Prompt Edukasi Produk\nJelaskan ${c.product} dengan bahasa sederhana untuk orang yang baru kenal niche ${c.niche}.`,
-      reply:`## Jawaban Santai\nIya kak, aku jelasin singkat ya. ${c.product} cocok kalau kakak ${c.problem}. Detailnya bisa aku bantu pilih sesuai kebutuhan.\n\n## Jawaban Trust Building\nPertanyaan bagus kak. Biar aman, kita cek dulu kebutuhan kakak, cara pakai, dan ekspektasinya. Kalau nggak cocok, aku bilang dari awal.\n\n## Jawaban Closing Halus\nKalau dari kebutuhan kakak, ini cukup masuk. Mau aku bantu proses yang paling simpel?\n\n## Jawaban Follow Up\nHalo kak, aku follow up ya. Masih mau dibantu cek ${c.product}? Kalau ada yang bikin ragu, tanya aja dulu.`
-    };
-    if(type==='commission'){ const price=num(val('commissionPrice')), pct=num(val('commissionPercent')), sold=Math.max(1,num(val('commissionSold'))); const per=price*pct/100; return `## Kalkulator Komisi\nHarga produk: ${rupiah(price)}\nKomisi per produk: ${rupiah(per)}\nJumlah terjual: ${sold}\nEstimasi komisi: ${rupiah(per*sold)}\nTotal potensi income: ${rupiah(price*sold)}`; }
-    return map[type] || '';
-  }
-  function initAffiliate(){
-    const tabs=document.getElementById('affiliateTabs'); if(!tabs) return; const select=document.getElementById('toolType');
-    tabs.innerHTML=toolDefs.map(([k,l])=>`<button ${k==='dashboard'?'class="active"':''} data-tool="${k}">${l}</button>`).join('');
-    select.innerHTML=toolDefs.filter(([k])=>!['dashboard','history'].includes(k)).map(([k,l])=>`<option value="${k}">${l}</option>`).join('');
-    const show = type => { document.querySelectorAll('[data-tool]').forEach(b=>b.classList.toggle('active',b.dataset.tool===type)); document.querySelectorAll('.affiliate-view,#affiliateResult').forEach(v=>v.classList.add('hidden')); if(type==='dashboard') document.getElementById('affiliateDashboard').classList.remove('hidden'); else if(type==='history'){ document.getElementById('affiliateHistoryView').classList.remove('hidden'); renderHistory(); } else { document.getElementById('affiliateForm').classList.remove('hidden'); select.value=type; updateAffiliateFields(); } };
-    tabs.addEventListener('click',e=>{ if(e.target.dataset.tool) show(e.target.dataset.tool); }); select.addEventListener('change',updateAffiliateFields);
-    document.getElementById('affiliateDashboard').innerHTML='<div class="stats-grid"><div class="stat-card"><span>Total tool</span><strong>10</strong></div><div class="stat-card"><span>Output</span><strong>Natural</strong></div><div class="stat-card"><span>Riwayat</span><strong>'+load(STORE.history).length+'</strong></div><div class="stat-card"><span>Mode</span><strong>Offline</strong></div></div><p class="muted">Pilih menu di kiri/atas untuk mulai generate bahan promosi.</p>';
-    document.getElementById('affiliateForm').addEventListener('submit',e=>{ e.preventDefault(); const type=select.value; const out=generate(type); document.getElementById('affiliateResult').classList.remove('hidden'); document.getElementById('affiliateResult').innerHTML=escapeHtml(out).replace(/^## (.*)$/gm,'<h3>$1</h3>'); const h=load(STORE.history); h.unshift({id:uid(),date:new Date().toISOString(),type,product:val('productName'),content:out}); save(STORE.history,h.slice(0,100)); toast('Hasil generate tersimpan di riwayat.'); });
-    document.getElementById('copyAffiliateResult').addEventListener('click',()=>copyText(document.getElementById('affiliateResult').innerText||''));
-    document.getElementById('exportHistoryTxt').addEventListener('click',()=>download('riwayat-affiliate.txt',load(STORE.history).map(h=>`[${h.type}] ${h.product}\n${h.content}`).join('\n\n---\n\n')));
-    document.getElementById('exportHistoryJson').addEventListener('click',()=>download('riwayat-affiliate.json',JSON.stringify(load(STORE.history),null,2),'application/json'));
-    document.getElementById('clearHistory').addEventListener('click',()=>{ if(confirm('Hapus semua riwayat generate?')){ save(STORE.history,[]); renderHistory(); toast('Riwayat dihapus.'); } });
-    show('dashboard');
-  }
-  function updateAffiliateFields(){ const t=val('toolType'); ['questionWrap','priceWrap','percentWrap','soldWrap'].forEach(id=>document.getElementById(id)?.classList.add('hidden')); if(t==='reply') document.getElementById('questionWrap').classList.remove('hidden'); if(t==='commission') ['priceWrap','percentWrap','soldWrap'].forEach(id=>document.getElementById(id).classList.remove('hidden')); }
-  function renderHistory(){ const list=document.getElementById('historyList'); if(!list) return; const h=load(STORE.history); list.innerHTML=h.length?h.map(x=>`<article class="history-item"><span class="badge">${x.type}</span><h3>${escapeHtml(x.product||'Tanpa nama produk')}</h3><p class="muted">${new Date(x.date).toLocaleString('id-ID')}</p><pre>${escapeHtml(x.content.slice(0,700))}</pre><button class="btn secondary" data-copy-history="${x.id}">Copy</button> <button class="btn danger" data-del-history="${x.id}">Hapus</button></article>`).join(''):'<div class="stat-card"><strong>Belum ada riwayat.</strong><span>Generate konten pertamamu dulu.</span></div>'; list.onclick=e=>{ const id=e.target.dataset.copyHistory||e.target.dataset.delHistory; if(!id) return; const arr=load(STORE.history); const item=arr.find(a=>a.id===id); if(e.target.dataset.copyHistory) copyText(item.content); else { save(STORE.history,arr.filter(a=>a.id!==id)); renderHistory(); } }; }
+}
 
-  let financeState = { tab:'dashboard', month:monthKey(today()) };
-  function initFinance(){ if(!document.getElementById('financeTabs')) return; ['txCategory','productQuickCategory','filterCategory'].forEach((id,i)=>fillSelect(id,categories,i===2)); ['txSource','quickSource','filterSource'].forEach((id,i)=>fillSelect(id,sources,i===2)); ['txPayment','quickPayment','filterPayment'].forEach((id,i)=>fillSelect(id,payments,i===2)); fillSelect('filterStatus',['Lunas','Belum Lunas','Refund'],true);
-    document.getElementById('txDate').value=today(); document.getElementById('quickDate').value=today();
-    document.getElementById('financeTabs').addEventListener('click',e=>{ if(e.target.dataset.financeTab){ financeState.tab=e.target.dataset.financeTab; renderFinance(); } });
-    document.getElementById('transactionForm').addEventListener('submit',saveTransaction); document.getElementById('quickForm').addEventListener('submit',saveQuick); document.getElementById('productForm').addEventListener('submit',saveProduct);
-    ['txQty','txCost','txPrice','txDiscount','txFee'].forEach(id=>document.getElementById(id).addEventListener('input',previewProfit));
-    document.getElementById('toggleQuickMode').onclick=()=>document.getElementById('quickForm').classList.toggle('hidden'); document.getElementById('quickProductSelect').onchange=applyQuickProduct;
-    ['searchTx','filterCategory','filterSource','filterPayment','filterStatus','sortTx'].forEach(id=>document.getElementById(id).addEventListener('input',renderTransactions));
-    document.getElementById('copyMonthlySummary').onclick=()=>copyText(monthlySummaryText()); document.getElementById('exportAllJson').onclick=exportAllJson; document.getElementById('exportMonthCsv').onclick=()=>exportCsv(false); document.getElementById('exportAllCsv').onclick=()=>exportCsv(true); document.getElementById('importJson').onchange=importJson; document.getElementById('resetAllData').onclick=resetAll; document.getElementById('resetTransactionForm').onclick=()=>setTimeout(()=>{document.getElementById('txDate').value=today(); previewProfit();},0);
-    renderFinance(); previewProfit(); }
-  function renderFinance(){ document.querySelectorAll('[data-finance-tab]').forEach(b=>b.classList.toggle('active',b.dataset.financeTab===financeState.tab)); document.querySelectorAll('.finance-view').forEach(v=>v.classList.add('hidden')); document.getElementById('finance'+financeState.tab[0].toUpperCase()+financeState.tab.slice(1)).classList.remove('hidden'); renderMonths(); renderQuickProducts(); if(financeState.tab==='dashboard') renderDashboard(); if(financeState.tab==='transactions') renderTransactions(); if(financeState.tab==='recap') renderRecap(); }
-  function renderMonths(){ const tx=load(STORE.tx); const keys=[...new Set([financeState.month,monthKey(today()),...tx.map(t=>monthKey(t.date))])].sort().reverse(); const sel=document.getElementById('activeMonth'); sel.innerHTML=keys.map(k=>`<option value="${k}">${monthLabel(k)}</option>`).join(''); sel.value=financeState.month; sel.onchange=()=>{financeState.month=sel.value;renderFinance();}; document.getElementById('monthChips').innerHTML=keys.slice(0,6).map(k=>`<button class="${k===financeState.month?'active':''}" data-month="${k}">${shortMonth(k)}</button>`).join(''); document.getElementById('monthChips').onclick=e=>{ if(e.target.dataset.month){ financeState.month=e.target.dataset.month; renderFinance(); } }; }
-  function renderDashboard(){ const tx=load(STORE.tx), s=summarize(tx,financeState.month), prev=summarize(tx,prevMonth(financeState.month)); const targets=load(STORE.targets,{}); const target=num(targets[financeState.month]); const pct=target?Math.min(100,Math.round(s.omzet/target*100)):0; document.getElementById('financeDashboard').innerHTML=`<div class="stats-grid">${[['Total omzet',rupiah(s.omzet)],['Total modal',rupiah(s.modal)],['Total keuntungan',rupiah(s.profit)],['Total transaksi',s.totalTx],['Total produk terjual',s.sold],['Produk paling laris',s.topProduct],['Sumber paling menghasilkan',s.topSource],['Metode paling sering',s.topPayment],['Transaksi belum lunas',s.unpaid],['Total refund',s.refunds]].map(([a,b])=>`<div class="stat-card"><span>${a}</span><strong>${b}</strong></div>`).join('')}</div><div class="target-box stat-card"><div class="field"><label>Target omzet ${monthLabel(financeState.month)}</label><input id="targetInput" type="number" min="0" value="${target}"></div><p><strong>Target ${shortMonth(financeState.month)} sudah tercapai ${pct}%</strong> · Sisa target: ${rupiah(Math.max(0,target-s.omzet))}</p><div class="progress"><i style="width:${pct}%"></i></div>${target&&s.omzet>=target?'<p class="badge">Mantap, target bulan ini sudah tercapai 🎉</p>':''}</div><div class="insights"><p>Produk paling laris bulan ini adalah <strong>${s.topProduct}</strong>.</p><p>Sumber pemasukan terbesar bulan ini dari <strong>${s.topSource}</strong>.</p><p>Masih ada <strong>${s.unpaid}</strong> transaksi belum lunas.</p><p>Keuntungan bulan ini ${prev.profit?s.profit>=prev.profit?'naik':'turun':'belum bisa dibandingkan'} dibanding bulan sebelumnya.</p></div>`; document.getElementById('targetInput').oninput=e=>{ const t=load(STORE.targets,{}); t[financeState.month]=num(e.target.value); save(STORE.targets,t); renderDashboard(); }; }
-  function prevMonth(k){ const d=new Date(`${k}-01T00:00:00`); d.setMonth(d.getMonth()-1); return d.toISOString().slice(0,7); }
-  function formTx(){ return { id:val('transactionId')||uid(), date:val('txDate'), name:val('txName'), category:val('txCategory'), source:val('txSource'), qty:Math.max(1,num(val('txQty'))), cost:num(val('txCost')), price:num(val('txPrice')), discount:num(val('txDiscount')), fee:num(val('txFee')), payment:val('txPayment'), status:val('txStatus'), note:val('txNote') }; }
-  function saveTransaction(e){ e.preventDefault(); const tx=formTx(); if(!tx.date||!tx.name||tx.qty<1) return toast('Tanggal, nama produk, dan jumlah wajib valid.'); const arr=load(STORE.tx); const i=arr.findIndex(x=>x.id===tx.id); i>=0?arr[i]=tx:arr.unshift(tx); save(STORE.tx,arr); financeState.month=monthKey(tx.date); document.getElementById('transactionForm').reset(); document.getElementById('transactionId').value=''; document.getElementById('txDate').value=today(); previewProfit(); toast('Transaksi tersimpan.'); renderFinance(); }
-  function saveQuick(e){ e.preventDefault(); const arr=load(STORE.tx); arr.unshift({id:uid(),date:val('quickDate')||today(),name:val('quickName'),category:'Produk Digital',source:val('quickSource'),qty:1,cost:num(val('quickCost')),price:num(val('quickPrice')),discount:0,fee:0,payment:val('quickPayment'),status:'Lunas',note:'Input cepat'}); save(STORE.tx,arr); toast('Transaksi cepat tersimpan.'); renderFinance(); }
-  function previewProfit(){ const out=document.getElementById('txProfitPreview'); if(out) out.value=rupiah(num(val('txQty'))*num(val('txPrice'))-num(val('txCost'))-num(val('txDiscount'))-num(val('txFee'))); }
-  function filteredTx(monthOnly=true){ let arr=load(STORE.tx).filter(t=>!monthOnly||monthKey(t.date)===financeState.month); const q=val('searchTx').toLowerCase(); if(q) arr=arr.filter(t=>t.name.toLowerCase().includes(q)); ['Category','Source','Payment','Status'].forEach(k=>{ const v=val('filter'+k); if(v) arr=arr.filter(t=>t[k.toLowerCase()]===v); }); const sort=val('sortTx'); return arr.sort((a,b)=>sort==='profit'?calcTx(b).profit-calcTx(a).profit:sort==='revenue'?calcTx(b).total-calcTx(a).total:new Date(b.date)-new Date(a.date)); }
-  function renderTransactions(){ const arr=filteredTx(true); const rows=document.getElementById('transactionRows'), cards=document.getElementById('transactionCards'); const actions=id=>`<div class="action-buttons"><button data-edit="${id}">Edit</button><button data-dup="${id}">Duplikat</button><button data-del="${id}">Hapus</button></div>`; rows.innerHTML=arr.map((t,i)=>{const c=calcTx(t);return `<tr><td>${i+1}</td><td>${t.date}</td><td>${escapeHtml(t.name)}</td><td>${t.category}</td><td>${t.source}</td><td class="money-cost">${rupiah(t.cost)}</td><td class="money-price">${rupiah(c.total)}</td><td class="money-profit">${rupiah(c.profit)}</td><td class="money-pay">${t.payment}</td><td>${t.status}</td><td>${actions(t.id)}</td></tr>`}).join('')||'<tr><td colspan="11">Belum ada transaksi bulan ini.</td></tr>'; cards.innerHTML=arr.map(t=>{const c=calcTx(t);return `<article class="tx-card"><span class="badge">${t.status}</span><h3>${escapeHtml(t.name)}</h3><p class="muted">${t.date} · ${t.category} · ${t.source}</p><p><b class="money-price">Harga: ${rupiah(c.total)}</b> · <b class="money-cost">Modal: ${rupiah(t.cost)}</b> · <b class="money-profit">Profit: ${rupiah(c.profit)}</b></p><p class="money-pay">${t.payment}</p>${actions(t.id)}</article>`}).join('')||'<div class="stat-card"><strong>Belum ada transaksi.</strong><span>Tambah transaksi pertamamu.</span></div>'; [rows,cards].forEach(el=>el.onclick=handleTxAction); }
-  function handleTxAction(e){ const id=e.target.dataset.edit||e.target.dataset.dup||e.target.dataset.del; if(!id) return; const arr=load(STORE.tx), t=arr.find(x=>x.id===id); if(e.target.dataset.del){ if(confirm('Hapus transaksi ini?')){ save(STORE.tx,arr.filter(x=>x.id!==id)); renderTransactions(); toast('Transaksi dihapus.'); } return; } if(e.target.dataset.dup){ const copy={...t,id:uid(),date:today(),note:(t.note||'')+' (duplikat)'}; arr.unshift(copy); save(STORE.tx,arr); renderFinance(); toast('Transaksi diduplikat.'); return; } financeState.tab='add'; renderFinance(); Object.entries({transactionId:t.id,txDate:t.date,txName:t.name,txCategory:t.category,txSource:t.source,txQty:t.qty,txCost:t.cost,txPrice:t.price,txDiscount:t.discount,txFee:t.fee,txPayment:t.payment,txStatus:t.status,txNote:t.note}).forEach(([id,v])=>document.getElementById(id).value=v); previewProfit(); window.scrollTo({top:0,behavior:'smooth'}); }
-  function renderQuickProducts(){ const sel=document.getElementById('quickProductSelect'); if(sel) sel.innerHTML='<option value="">Isi manual / pilih produk</option>'+load(STORE.products).map(p=>`<option value="${p.id}">${escapeHtml(p.name)}</option>`).join(''); const list=document.getElementById('quickProductsList'); if(list) list.innerHTML=load(STORE.products).map(p=>`<article class="product-item"><h3>${escapeHtml(p.name)}</h3><p>${p.category} · ${rupiah(p.price)} · Modal ${rupiah(p.cost)}</p><p class="muted">${escapeHtml(p.note||'')}</p><button data-edit-product="${p.id}" class="btn secondary">Edit</button> <button data-del-product="${p.id}" class="btn danger">Hapus</button></article>`).join('')||'<div class="stat-card"><strong>Belum ada produk cepat.</strong></div>'; if(list) list.onclick=handleProductAction; }
-  function saveProduct(e){ e.preventDefault(); const p={id:val('productId')||uid(),name:val('productQuickName'),category:val('productQuickCategory'),price:num(val('productQuickPrice')),cost:num(val('productQuickCost')),note:val('productQuickNote')}; const arr=load(STORE.products); const i=arr.findIndex(x=>x.id===p.id); i>=0?arr[i]=p:arr.unshift(p); save(STORE.products,arr); e.target.reset(); document.getElementById('productId').value=''; renderQuickProducts(); toast('Produk cepat tersimpan.'); }
-  function handleProductAction(e){ const id=e.target.dataset.editProduct||e.target.dataset.delProduct; if(!id)return; const arr=load(STORE.products), p=arr.find(x=>x.id===id); if(e.target.dataset.delProduct){ save(STORE.products,arr.filter(x=>x.id!==id)); renderQuickProducts(); return; } Object.entries({productId:p.id,productQuickName:p.name,productQuickCategory:p.category,productQuickPrice:p.price,productQuickCost:p.cost,productQuickNote:p.note}).forEach(([id,v])=>document.getElementById(id).value=v); }
-  function applyQuickProduct(){ const p=load(STORE.products).find(x=>x.id===val('quickProductSelect')); if(!p)return; document.getElementById('txName').value=p.name; document.getElementById('txCategory').value=p.category; document.getElementById('txPrice').value=p.price; document.getElementById('txCost').value=p.cost; previewProfit(); }
-  function monthlySummaryText(){ const s=summarize(load(STORE.tx),financeState.month); return `Rekap ${monthLabel(financeState.month)}:\nOmzet: ${rupiah(s.omzet)}\nModal: ${rupiah(s.modal)}\nKeuntungan: ${rupiah(s.profit)}\nTotal transaksi: ${s.totalTx}\nProduk terlaris: ${s.topProduct}\nSumber terbesar: ${s.topSource}\nMetode pembayaran utama: ${s.topPayment}`; }
-  function renderRecap(){ const tx=load(STORE.tx), counted=tx.filter(activeTx); const all={omzet:counted.reduce((s,t)=>s+calcTx(t).total,0),modal:counted.reduce((s,t)=>s+num(t.cost),0),profit:counted.reduce((s,t)=>s+calcTx(t).profit,0)}; const byMonth=groupSum(counted,t=>monthKey(t.date),t=>calcTx(t).total), profitMonth=groupSum(counted,t=>monthKey(t.date),t=>calcTx(t).profit); const max=Math.max(1,...Object.values(byMonth)); document.getElementById('financeRecap').innerHTML=`<div class="stats-grid">${[['Total omzet semua waktu',rupiah(all.omzet)],['Total modal semua waktu',rupiah(all.modal)],['Total profit semua waktu',rupiah(all.profit)],['Total transaksi semua waktu',counted.length],['Bulan omzet tertinggi',monthLabel(topOf(byMonth)?.[0]||monthKey(today()))],['Bulan profit tertinggi',monthLabel(topOf(profitMonth)?.[0]||monthKey(today()))],['Produk terlaris sepanjang waktu',topOf(groupSum(counted,t=>t.name,t=>num(t.qty)))?.[0]||'-'],['Sumber terbesar sepanjang waktu',topOf(groupSum(counted,t=>t.source,t=>calcTx(t).total))?.[0]||'-'],['Metode paling sering dipakai',topOf(groupSum(counted,t=>t.payment,t=>1))?.[0]||'-']].map(([a,b])=>`<div class="stat-card"><span>${a}</span><strong>${b}</strong></div>`).join('')}</div><h3>Rekap omzet per bulan</h3><div class="chart">${Object.keys(byMonth).sort().map(k=>`<div class="chart-row"><span>${shortMonth(k)}</span><div class="bar"><i style="width:${byMonth[k]/max*100}%"></i></div><strong>${rupiah(byMonth[k])}</strong></div>`).join('')||'<p class="muted">Belum ada data chart.</p>'}</div><h3>Rekap profit per bulan</h3><div class="chart">${Object.keys(profitMonth).sort().map(k=>`<div class="chart-row"><span>${shortMonth(k)}</span><div class="bar"><i style="width:${Math.max(3,profitMonth[k]/Math.max(1,...Object.values(profitMonth))*100)}%"></i></div><strong>${rupiah(profitMonth[k])}</strong></div>`).join('')||'<p class="muted">Belum ada data profit.</p>'}</div>`; }
-  function exportAllJson(){ download('digital-seller-backup.json',JSON.stringify({transactions:load(STORE.tx),products:load(STORE.products),targets:load(STORE.targets,{}),darkMode:localStorage.getItem(STORE.dark)==='true'},null,2),'application/json'); }
-  function csv(items){ const cols=['date','name','category','source','qty','cost','price','discount','fee','payment','status','note']; return [cols.join(','),...items.map(t=>cols.map(c=>`"${String(t[c]??'').replaceAll('"','""')}"`).join(','))].join('\n'); }
-  function exportCsv(all){ const items=all?load(STORE.tx):load(STORE.tx).filter(t=>monthKey(t.date)===financeState.month); download(all?'semua-transaksi.csv':`transaksi-${financeState.month}.csv`,csv(items),'text/csv'); }
-  function importJson(e){ const file=e.target.files[0]; if(!file)return; const r=new FileReader(); r.onload=()=>{ try{ const d=JSON.parse(r.result); if(d.transactions) save(STORE.tx,d.transactions); if(d.products) save(STORE.products,d.products); if(d.targets) save(STORE.targets,d.targets); if('darkMode' in d) save(STORE.dark,!!d.darkMode); toast('Data berhasil diimport.'); renderFinance(); }catch{ toast('File JSON tidak valid.'); } }; r.readAsText(file); }
-  function resetAll(){ if(prompt('Ketik RESET untuk menghapus semua data')==='RESET'){ [STORE.tx,STORE.products,STORE.targets,STORE.history,STORE.dark].forEach(k=>localStorage.removeItem(k)); toast('Semua data direset.'); renderFinance(); } }
+function buildAnalysis(ctx) {
+  return {
+    id: 'analysis',
+    title: 'Analisis Produk Singkat',
+    copyLabel: 'Copy Analisis',
+    type: 'list',
+    items: [
+      `Produk ini cocok dijual ke ${pick(ctx.productData.target, 0)}.`,
+      `Masalah utama audiens: ${pick(ctx.productData.pain, 0)}. Biasanya mereka bukan malas, tapi belum nemu langkah yang terasa gampang dimulai.`,
+      `Alasan orang mungkin tertarik beli: ${ctx.productData.benefit}.`,
+      `Angle promosi terbaik: “${titleCase(pick(ctx.productData.angle, 0))}”. Bukan sekadar nawarin ${ctx.product}, tapi bantu audiens merasa “oh, ini bisa bantu aku mulai lebih rapi”.`,
+      `Kesalahan yang harus dihindari: ${ctx.productData.avoid}`
+    ]
+  };
+}
 
-  initGlobal(); initHome(); initAffiliate(); initFinance();
-})();
+function buildAudience(ctx) {
+  return {
+    id: 'audience',
+    title: 'Target Audiens Otomatis',
+    copyLabel: 'Copy Target Audiens',
+    type: 'cards',
+    cards: [0, 1, 2].map(index => ({
+      heading: `Target ${index + 1}: ${titleCase(pick(ctx.productData.target, index))}`,
+      lines: [
+        `Masalah mereka: ${pick(ctx.productData.pain, index)}.`,
+        `Cara ngomong ke mereka: pakai contoh keseharian, jangan langsung ngejar closing, dan mulai dari kalimat yang bikin mereka merasa dipahami.`
+      ]
+    }))
+  };
+}
+
+function buildAngles(ctx) {
+  return {
+    id: 'angles',
+    title: 'Angle Konten',
+    copyLabel: 'Copy Angle',
+    type: 'cards',
+    cards: ctx.productData.angle.slice(0, 5).map((angle, index) => ({
+      heading: `Angle: ${titleCase(angle)}`,
+      lines: [
+        `Kenapa kuat: nyambung dengan masalah “${pick(ctx.productData.pain, index)}” dan cocok untuk format ${ctx.platformData.channel}.`,
+        `Contoh pembuka: “${angleOpener(ctx, index)}”`
+      ]
+    }))
+  };
+}
+
+function angleOpener(ctx, index) {
+  const openers = [
+    `banyak orang pengen mulai, tapi berhenti di bagian “mulainya dari mana?”`,
+    `kadang masalahnya bukan ga butuh, tapi belum kebayang kenapa ${ctx.product} relevan buat mereka`,
+    `kalau tiap mau posting malah blank, berarti kamu butuh angle yang lebih dekat sama masalah audiens`,
+    `promosi yang enak itu bukan yang paling heboh, tapi yang paling relate`,
+    `sebelum nawarin ${ctx.product}, coba bahas dulu masalah kecil yang sering mereka rasakan`
+  ];
+  return openers[index];
+}
+
+function buildHooks(ctx) {
+  const pain = pick(ctx.productData.pain, 0);
+  const hooks = [
+    'jujur, banyak pemula bukan gagal karena malas. mereka cuma kebanyakan bingung duluan.',
+    'kadang yang bikin ga mulai jualan itu bukan modal, tapi ga tahu harus mulai dari mana.',
+    'kalau tiap mau posting malah blank, berarti masalahnya bukan di niat doang.',
+    `aku baru ngeh, promosi ${ctx.product} ga harus selalu terdengar jualan banget.`,
+    'banyak orang stuck di bagian kecil: ngerti produknya, tapi bingung ngomonginnya.',
+    'ini bukan buat yang pengen instan, tapi buat yang pengen mulai lebih rapi.',
+    'sebelum mikir closing, coba bikin orang merasa “ini masalah aku banget”.',
+    `kalau kamu sering ${pain}, konten pertamamu ga harus ribet.`,
+    `cara paling aman promosi ${ctx.product}: mulai dari cerita masalah, bukan langsung nyuruh beli.`,
+    'angle yang bagus itu ga maksa orang beli, tapi bikin mereka paham kenapa produknya kepake.'
+  ];
+  return { id: 'hooks', title: 'Hook Siap Pakai', copyLabel: 'Copy Hook', type: 'ordered', items: adaptByVariant(hooks, ctx.variant) };
+}
+
+function adaptByVariant(items, variant) {
+  if (variant === 'santai') return items.map(item => item.replace('jujur,', 'jujur ya,').replace('aku baru ngeh', 'aku baru sadar'));
+  if (variant === 'soft') return items.map(item => `${item} pelan-pelan aja, ga perlu ngegas jualan.`);
+  if (variant === 'relate') return items.map(item => item.replace('banyak orang', 'banyak pemula tuh').replace('kalau kamu', 'kalau kamu juga'));
+  return items;
+}
+
+function buildCaptions(ctx) {
+  const pain = pick(ctx.productData.pain, 1);
+  const angle = pick(ctx.productData.angle, 0);
+  return {
+    id: 'captions',
+    title: 'Caption Siap Posting',
+    copyLabel: 'Copy Caption',
+    type: 'cards',
+    cards: [
+      {
+        heading: 'Versi 1: Soft selling',
+        text: `${ctx.styleData.intro}.\n\nKalau kamu lagi promosi ${ctx.product}, coba jangan mulai dari “beli sekarang”. Mulai dari masalah yang paling dekat dulu: ${pain}.\n\nDari situ, ${ctx.product} bisa diposisikan sebagai jalan yang lebih rapi buat mulai. Bukan yang bikin semuanya instan, tapi bantu langkah awalnya terasa lebih jelas.\n\n${ctx.styleData.cta}.`
+      },
+      {
+        heading: 'Versi 2: Storytelling / relate',
+        text: `Pernah ga sih, udah punya niat jualan tapi pas mau posting malah blank?\n\nKadang bukan karena produknya jelek. Kita cuma belum nemu cara ngomong yang bikin orang merasa relate. Untuk ${ctx.product}, angle yang enak dipakai adalah “${angle}”.\n\nJadi kontennya ga perlu heboh. Cukup ceritain masalahnya, kasih konteks, baru arahkan ke produk.\n\nKalau kamu mau lihat detailnya, boleh DM atau cek link yang aku taruh.`
+      },
+      {
+        heading: 'Versi 3: Edukasi singkat',
+        text: `Sebelum promosi ${ctx.product}, coba jawab 3 hal dulu:\n\n1. Siapa yang paling butuh?\n2. Masalah apa yang lagi mereka rasakan?\n3. Kenapa produk ini bisa bantu mereka mulai lebih gampang?\n\nKalau jawabannya sudah jelas, caption jadi lebih natural dan CTA ga terasa maksa.\n\nSimpan dulu kalau kamu sering bingung mulai dari mana.`
+      }
+    ]
+  };
+}
+
+function buildCtas(ctx) {
+  const base = [
+    'komen “MAU” nanti aku spill isinya',
+    'kalau mau mulai tanpa ribet bikin dari nol, cek link di bio',
+    'DM aja kalau mau lihat detail paketnya',
+    'simpan dulu, siapa tahu nanti kamu butuh pas mulai jualan',
+    'kalau masih bingung cocok atau enggak, tanya aja dulu',
+    'aku taruh detailnya di bio, cek pelan-pelan ya',
+    'mau aku kirim contoh pemakaiannya? komen “CONTOH”',
+    'kalau kamu relate sama masalah ini, boleh cek detailnya dulu',
+    'ga harus beli sekarang, tapi boleh simpan dulu biar ga lupa',
+    'kalau mau versi yang paling cocok buat pemula, DM aku ya'
+  ];
+  const items = ctx.platform === 'WhatsApp'
+    ? base.map(item => item.replace('link di bio', 'chat ini').replace('di bio', 'di chat').replace('komen “MAU”', 'chat “MAU”'))
+    : base;
+  return { id: 'ctas', title: 'CTA Siap Pakai', copyLabel: 'Copy CTA', type: 'ordered', items };
+}
+
+function buildScripts(ctx) {
+  return {
+    id: 'scripts',
+    title: 'Script Video Pendek',
+    copyLabel: 'Copy Script',
+    type: 'cards',
+    cards: [
+      {
+        heading: 'Script 1: Problem dulu baru produk',
+        text: `Opening: “kalau kamu sering bingung mau promosi ${ctx.product} dari mana, mulai dari sini dulu.”\nIsi: bahas satu masalah audiens: ${pick(ctx.productData.pain, 0)}. Lalu jelaskan kenapa angle “${pick(ctx.productData.angle, 0)}” lebih enak daripada langsung jualan.\nClosing: “kalau mau detailnya, cek link atau DM aja ya.”\nTeks layar: “jangan mulai dari jualan, mulai dari masalah”\nIde visual: ${ctx.platformData.visual}.`
+      },
+      {
+        heading: 'Script 2: Relate pemula',
+        text: `Opening: “jujur, banyak pemula stuck bukan karena malas.”\nIsi: ceritakan mereka sudah niat jualan, tapi blank pas bikin konten. Masukkan ${ctx.product} sebagai pilihan yang bikin langkah awal lebih rapi.\nClosing: “simpan dulu kalau kamu lagi di fase ini.”\nTeks layar: “yang bikin stuck: bingung mulai”\nIde visual: rekam layar catatan ide konten, lalu tampilkan produk/detail singkat.`
+      },
+      {
+        heading: 'Script 3: Review halus',
+        text: `Opening: “aku ga mau bilang ini wajib buat semua orang, tapi buat tipe ini lumayan kepake.”\nIsi: sebut siapa yang cocok: ${pick(ctx.productData.target, 0)}. Jelaskan benefit tanpa klaim berlebihan dan tunjukkan cara pakainya.\nClosing: “cek detailnya dulu, kalau cocok baru lanjut.”\nTeks layar: “cocok kalau kamu butuh yang lebih praktis”\nIde visual: demo singkat, close-up produk, atau screen record detail produk.`
+      }
+    ]
+  };
+}
+
+function buildDmReplies(ctx) {
+  return {
+    id: 'dm',
+    title: 'Balasan DM Calon Pembeli',
+    copyLabel: 'Copy DM',
+    type: 'cards',
+    cards: [
+      { heading: 'Tanya: “ini isinya apa?”', text: `Isinya detail tentang ${ctx.product} ya. Aku jelasin singkat: ini dibuat buat bantu kamu mulai lebih rapi, jadi kamu ga perlu nebak-nebak dari nol. Kalau mau, aku bisa kirim poin isinya satu-satu.` },
+      { heading: 'Tanya: “cocok buat pemula ga?”', text: 'Cocok, apalagi kalau kamu masih sering bingung mulai dari mana. Tapi tetap pelan-pelan ya, ini bukan yang bikin hasil instan. Lebih ke bantu kamu punya arah dan bahan promosi yang lebih jelas.' },
+      { heading: 'Tanya: “bisa dijual ulang ga?”', text: 'Tergantung ketentuan produknya ya. Kalau memang ada izin jual ulang/reseller, nanti biasanya aku jelasin batas pakainya juga biar aman dan ga salah promosi.' },
+      { heading: 'Bilang: “mahal”', text: 'Paham kok. Kalau dilihat sekilas mungkin terasa lumayan. Coba cek dulu isinya dan kamu bandingin sama waktu yang bisa dihemat. Kalau belum cocok sekarang juga gapapa banget.' },
+      { heading: 'Bilang: “nanti dulu”', text: 'Aman, ga perlu buru-buru. Aku kirim detailnya dulu aja ya, nanti kalau kamu udah siap mulai atau mau tanya-tanya, tinggal chat lagi.' }
+    ]
+  };
+}
+
+function buildPostingPlan(ctx) {
+  const product = ctx.product;
+  const plan = [
+    ['Hari 1: Edukasi masalah', `Bahas kenapa ${pick(ctx.productData.pain, 0)} sering bikin orang ga mulai.`, 'banyak pemula tuh bukan ga niat, tapi belum tahu langkah pertamanya.', 'simpan dulu kalau kamu sering ngerasa begini.'],
+    ['Hari 2: Konten relate', `Ceritakan momen saat mau posting tapi blank, lalu sambungkan ke ${product}.`, 'kalau tiap mau promosi malah mikir kelamaan, kamu ga sendirian.', 'komen “RELATE” kalau pernah ngalamin.'],
+    ['Hari 3: Soft selling', `Kenalkan ${product} sebagai alat bantu, bukan jalan instan.`, 'ini bukan buat yang pengen instan, tapi buat yang mau mulai lebih rapi.', ctx.styleData.cta],
+    ['Hari 4: Bukti/manfaat', 'Tunjukkan manfaat, isi, demo, before-after, atau contoh pemakaian.', 'yang bikin produk lebih gampang dipahami itu bukan klaim, tapi contoh.', 'DM kalau mau lihat detail contohnya.'],
+    ['Hari 5: Closing/CTA', 'Rangkum siapa yang cocok, masalah yang dibantu, dan ajakan action halus.', 'kalau kamu lagi di fase pengen mulai tapi masih muter-muter, ini bisa jadi langkah awal.', ctx.platformData.cta]
+  ];
+  return {
+    id: 'plan',
+    title: 'Rencana Posting 5 Hari',
+    copyLabel: 'Copy Rencana Posting',
+    type: 'cards',
+    cards: plan.map(([heading, idea, hook, cta]) => ({ heading, lines: [`Tema konten: ${heading.split(': ')[1]}`, `Ide posting: ${idea}`, `Hook: “${hook}”`, `CTA: ${cta}`] }))
+  };
+}
+
+function sectionText(section) {
+  if (section.type === 'ordered' || section.type === 'list') return section.items.map((item, index) => section.type === 'ordered' ? `${index + 1}. ${item}` : `- ${item}`).join('\n');
+  return section.cards.map(card => {
+    const body = card.text || card.lines.map(line => `- ${line}`).join('\n');
+    return `${card.heading}\n${body}`;
+  }).join('\n\n');
+}
+
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>'"]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#039;', '"': '&quot;' }[char]));
+}
+
+function renderSection(section) {
+  if (section.type === 'ordered') return `<ol>${section.items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ol>`;
+  if (section.type === 'list') return `<ul>${section.items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`;
+  return `<div class="strategy-list">${section.cards.map(card => `<article class="strategy-item"><strong>${escapeHtml(card.heading)}</strong>${card.text ? `<p class="caption-box">${escapeHtml(card.text)}</p>` : `<ul>${card.lines.map(line => `<li>${escapeHtml(line)}</li>`).join('')}</ul>`}</article>`).join('')}</div>`;
+}
+
+function renderResults(sections) {
+  const resultGrid = $('#resultGrid');
+  resultGrid.innerHTML = sections.map(section => {
+    const plain = sectionText(section);
+    return `<article class="result-card" id="${section.id}"><div class="result-card-header"><h3>${escapeHtml(section.title)}</h3><button class="btn secondary copy-section" type="button" data-copy="${escapeHtml(plain)}">${escapeHtml(section.copyLabel)}</button></div><div class="content-block">${renderSection(section)}</div></article>`;
+  }).join('');
+  $$('.copy-section', resultGrid).forEach(button => {
+    button.addEventListener('click', () => copyText(button.dataset.copy, `${button.textContent} berhasil`));
+  });
+}
+
+function copyText(text, message = 'Berhasil dicopy') {
+  if (navigator.clipboard?.writeText) {
+    navigator.clipboard.writeText(text).then(() => showToast(message));
+    return;
+  }
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  textarea.setAttribute('readonly', '');
+  textarea.style.position = 'fixed';
+  textarea.style.opacity = '0';
+  document.body.appendChild(textarea);
+  textarea.select();
+  document.execCommand('copy');
+  textarea.remove();
+  showToast(message);
+}
+
+function showToast(message) {
+  const toast = $('#toast');
+  toast.textContent = message;
+  toast.classList.add('show');
+  clearTimeout(window.toastTimer);
+  window.toastTimer = setTimeout(() => toast.classList.remove('show'), 1700);
+}
+
+function getFormValues() {
+  return Object.fromEntries(new FormData($('#promoForm')).entries());
+}
+
+function setLoading(isLoading) {
+  $('#loadingState').hidden = !isLoading;
+  $('#emptyState').hidden = isLoading || $('#resultGrid').children.length > 0;
+  $('#generateButton').disabled = isLoading;
+  $('#generateButton').textContent = isLoading ? 'Lagi mikirin strateginya...' : 'Generate Paket Promosi';
+}
+
+function runGenerate(variant = 'default') {
+  const form = $('#promoForm');
+  if (!form.reportValidity()) return;
+  const values = getFormValues();
+  $('#resultGrid').innerHTML = '';
+  $('#resultActions').hidden = true;
+  setLoading(true);
+
+  setTimeout(() => {
+    const sections = generatePackage(values, variant);
+    const allText = sections.map(section => `# ${section.title}\n${sectionText(section)}`).join('\n\n---\n\n');
+    renderResults(sections);
+    $('#copyAllButton').onclick = () => copyText(allText, 'Semua paket berhasil dicopy');
+    localStorage.setItem(LAST_PACKAGE_KEY, JSON.stringify({ values, variant, generatedAt: new Date().toISOString(), allText }));
+    $('#resultActions').hidden = false;
+    $('#loadingState').hidden = true;
+    $('#emptyState').hidden = true;
+    $('#generateButton').disabled = false;
+    $('#generateButton').textContent = 'Generate Paket Promosi';
+    $('#resultTitle').textContent = 'Paket Promosi Siap Pakai';
+    $('#resultTitle').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 520);
+}
+
+function initTheme() {
+  if (localStorage.getItem(THEME_KEY) === 'dark') document.body.classList.add('dark');
+  $('#themeToggle').addEventListener('click', () => {
+    document.body.classList.toggle('dark');
+    localStorage.setItem(THEME_KEY, document.body.classList.contains('dark') ? 'dark' : 'light');
+  });
+}
+
+function init() {
+  initTheme();
+  $('#promoForm').addEventListener('submit', event => {
+    event.preventDefault();
+    runGenerate('default');
+  });
+  $$('[data-variant]').forEach(button => button.addEventListener('click', () => runGenerate(button.dataset.variant)));
+}
+
+document.addEventListener('DOMContentLoaded', init);
