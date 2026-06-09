@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10b981">
+  <title>Digital Seller Super Tools</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="home">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="index.html" aria-label="Digital Seller Super Tools"><img src="icon.svg" alt="" class="brand-icon"><span>Digital Seller<br><strong>Super Tools</strong></span></a>
+      <nav class="side-nav" aria-label="Navigasi utama">
+        <a class="active" href="index.html">🏠 Home</a>
+        <a href="tools-affiliate.html">⚡ Tools Affiliate</a>
+        <a href="buku-keuangan.html">💸 Buku Keuangan</a>
+      </nav>
+      <button class="theme-toggle" data-theme-toggle type="button">🌙 Dark Mode</button>
+    </aside>
+
+    <main class="page page-home">
+      <header class="topbar">
+        <a class="brand mobile-brand" href="index.html"><img src="icon.svg" alt="" class="brand-icon"><span>Digital Seller <strong>Super Tools</strong></span></a>
+        <button class="theme-toggle compact" data-theme-toggle type="button">🌙</button>
+      </header>
+
+      <section class="hero glass-card">
+        <div class="hero-copy">
+          <span class="eyebrow">PWA premium buat seller digital</span>
+          <h1>Satu tempat buat bantu promosi, catat penjualan, dan pantau cuan digitalmu.</h1>
+          <p>Tools ringan untuk affiliate, produk digital, jualan aplikasi premium, langganan AI, dan pemasukan online lainnya.</p>
+          <div class="hero-actions">
+            <a class="btn primary" href="tools-affiliate.html">Masuk Tools Affiliate</a>
+            <a class="btn secondary" href="buku-keuangan.html">Buka Buku Keuangan</a>
+          </div>
+        </div>
+        <div class="hero-panel">
+          <div class="mini-window"><span></span><span></span><span></span></div>
+          <div class="metric-row"><span>Profit bulan ini</span><strong id="homeHeroProfit">Rp0</strong></div>
+          <div class="spark-bars"><i style="height:38%"></i><i style="height:68%"></i><i style="height:50%"></i><i style="height:84%"></i><i style="height:64%"></i></div>
+          <p class="muted">Offline-ready, localStorage, tanpa backend.</p>
+        </div>
+      </section>
+
+      <section class="section-grid features-grid">
+        <article class="feature-card"><div class="feature-icon">⚡</div><h2>Tools Affiliate</h2><p>Buat hook, caption, CTA, script video, dan ide konten promosi.</p></article>
+        <article class="feature-card"><div class="feature-icon">💸</div><h2>Buku Keuangan Digital</h2><p>Catat pemasukan manual dan lihat rekap omzet, modal, profit per bulan.</p></article>
+        <article class="feature-card"><div class="feature-icon">📲</div><h2>PWA Offline</h2><p>Bisa dipasang ke layar utama HP dan tetap bisa dipakai offline setelah dibuka pertama kali.</p></article>
+      </section>
+
+      <section class="dashboard-card">
+        <div class="section-title"><div><span class="eyebrow">Snapshot</span><h2>Ringkasan penjualan bulan ini</h2></div><a class="btn ghost" href="buku-keuangan.html">Kelola transaksi</a></div>
+        <div id="homeSalesOverview" class="overview-grid"></div>
+      </section>
+
+      <section class="dashboard-card">
+        <div class="section-title"><div><span class="eyebrow">Cocok untuk</span><h2>Seller yang butuh tools simpel tapi powerfull</h2></div></div>
+        <div class="chips-list">
+          <span>Digital seller</span><span>Affiliate Shopee/TikTok</span><span>Penjual APK premium</span><span>Penjual akses AI premium</span><span>Pemula yang jualan dari HP</span><span>Kreator yang mau tracking pemasukan</span>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <nav class="bottom-nav" aria-label="Navigasi mobile"><a class="active" href="index.html">🏠<span>Home</span></a><a href="tools-affiliate.html">⚡<span>Tools</span></a><a href="buku-keuangan.html">💸<span>Buku</span></a></nav>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="script.js"></script>
+</body>
+</html>

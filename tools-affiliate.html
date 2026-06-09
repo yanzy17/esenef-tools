@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#10b981">
+  <title>Tools Affiliate - Digital Seller Super Tools</title>
+  <link rel="manifest" href="manifest.json"><link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="stylesheet" href="style.css">
+</head>
+<body data-page="affiliate">
+  <div class="app-shell">
+    <aside class="sidebar"><a class="brand" href="index.html"><img src="icon.svg" alt="" class="brand-icon"><span>Digital Seller<br><strong>Super Tools</strong></span></a><nav class="side-nav"><a href="index.html">🏠 Home</a><a class="active" href="tools-affiliate.html">⚡ Tools Affiliate</a><a href="buku-keuangan.html">💸 Buku Keuangan</a></nav><button class="theme-toggle" data-theme-toggle type="button">🌙 Dark Mode</button></aside>
+    <main class="page">
+      <header class="topbar"><a class="brand mobile-brand" href="index.html"><img src="icon.svg" alt="" class="brand-icon"><span>Tools <strong>Affiliate</strong></span></a><button class="theme-toggle compact" data-theme-toggle type="button">🌙</button></header>
+      <section class="page-hero"><span class="eyebrow">Tools Jualan</span><h1>Generator bahan promosi affiliate & produk digital.</h1><p>Bikin angle, hook, caption, CTA, script video, ide konten, prompt AI, dan balasan DM dengan bahasa natural.</p></section>
+      <div class="workspace-layout">
+        <nav class="tool-tabs" id="affiliateTabs" aria-label="Menu tools affiliate"></nav>
+        <section class="panel-card">
+          <div id="affiliateDashboard" class="affiliate-view"></div>
+          <form id="affiliateForm" class="form-grid affiliate-view hidden">
+            <div class="field span-2"><label for="toolType">Pilih tool</label><select id="toolType"></select></div>
+            <div class="field"><label for="productName">Nama produk</label><input id="productName" placeholder="Contoh: Gemini Pro 6 bulan"></div>
+            <div class="field"><label for="productNiche">Niche produk</label><input id="productNiche" placeholder="AI, digital product, produktivitas"></div>
+            <div class="field"><label for="audience">Target audiens</label><input id="audience" placeholder="Mahasiswa, seller online, kreator"></div>
+            <div class="field"><label for="audienceProblem">Masalah audiens</label><input id="audienceProblem" placeholder="Mau kerja cepat tapi budget terbatas"></div>
+            <div class="field"><label for="mainBenefit">Benefit utama</label><input id="mainBenefit" placeholder="Akses tools premium lebih hemat"></div>
+            <div class="field"><label for="platform">Platform konten</label><select id="platform"><option>TikTok</option><option>Instagram</option><option>Threads</option><option>WhatsApp</option><option>Telegram</option><option>Shopee</option></select></div>
+            <div class="field"><label for="tone">Tone bahasa</label><select id="tone"><option>Casual Gen Z</option><option>Soft selling</option><option>Storytelling</option><option>Edukatif</option><option>Provokatif halus</option><option>Profesional santai</option></select></div>
+            <div class="field"><label for="contentGoal">Tujuan konten</label><input id="contentGoal" placeholder="Awareness, DM masuk, closing"></div>
+            <div class="field span-2" id="questionWrap"><label for="buyerQuestion">Pertanyaan calon pembeli (khusus Reply DM)</label><textarea id="buyerQuestion" rows="3" placeholder="Kak ini aman? Bedanya sama yang lain apa?"></textarea></div>
+            <div class="field" id="priceWrap"><label for="commissionPrice">Harga produk</label><input id="commissionPrice" type="number" min="0" placeholder="100000"></div>
+            <div class="field" id="percentWrap"><label for="commissionPercent">Persentase komisi</label><input id="commissionPercent" type="number" min="0" placeholder="20"></div>
+            <div class="field" id="soldWrap"><label for="commissionSold">Jumlah terjual</label><input id="commissionSold" type="number" min="1" placeholder="5"></div>
+            <div class="form-actions span-2"><button class="btn primary" type="submit">Generate Sekarang</button><button class="btn secondary" type="button" id="copyAffiliateResult">Copy Hasil</button></div>
+          </form>
+          <article id="affiliateResult" class="result-box hidden"></article>
+          <section id="affiliateHistoryView" class="affiliate-view hidden"><div class="section-title"><div><span class="eyebrow">Riwayat</span><h2>Riwayat Generate</h2></div><div class="inline-actions"><button class="btn secondary" id="exportHistoryTxt">Export TXT</button><button class="btn secondary" id="exportHistoryJson">Export JSON</button><button class="btn danger" id="clearHistory">Hapus Riwayat</button></div></div><div id="historyList" class="history-list"></div></section>
+        </section>
+      </div>
+    </main>
+  </div>
+  <nav class="bottom-nav"><a href="index.html">🏠<span>Home</span></a><a class="active" href="tools-affiliate.html">⚡<span>Tools</span></a><a href="buku-keuangan.html">💸<span>Buku</span></a></nav><div id="toast" class="toast"></div><script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "name": "Digital Seller Super Tools",
+  "short_name": "Seller Tools",
+  "description": "PWA premium untuk digital seller, affiliator, dan penjual produk digital dari HP.",
+  "start_url": "index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#f4fbf8",
+  "theme_color": "#10b981",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
